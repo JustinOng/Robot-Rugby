@@ -2,6 +2,13 @@
 
 void setup() {
   Serial1.begin(115200);
+  
+  for(uint8_t i = 14; i <= 19; i++) {
+    pinMode(i, INPUT);
+  }
+  
+  ReceiverInput.begin();
+  pinMode(13, OUTPUT);
 }
 
 void loop() {
