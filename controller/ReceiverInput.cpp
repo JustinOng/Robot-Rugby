@@ -6,7 +6,9 @@ ReceiverInputClass::ReceiverInputClass(void) {
     Channel channel;
     channels[i] = &channel;
   }
-  
+}
+
+void ReceiverInputClass::begin(void) {
   attachInterrupt(INPUT_CH1, isr_ch1, CHANGE);
   attachInterrupt(INPUT_CH2, isr_ch2, FALLING);
   attachInterrupt(INPUT_CH3, isr_ch3, FALLING);
