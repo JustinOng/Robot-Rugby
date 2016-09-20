@@ -17,7 +17,7 @@
 
 class ReceiverInputClass {
   public:
-    volatile Channel * channels[6];
+    volatile Channel channels[6];
     volatile uint32_t last_rising_edge = 0;
     
     ReceiverInputClass(void);

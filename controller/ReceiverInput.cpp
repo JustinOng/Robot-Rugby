@@ -1,34 +1,40 @@
 #include "ReceiverInput.h"
 
 ReceiverInputClass::ReceiverInputClass(void) {
-  // create 6 channel structs and store in array
-  for(uint8_t i = 0; i < 6; i++) {
-    Channel channel;
-    channels[i] = &channel;
-  }
+  
 }
 
 void ReceiverInputClass::begin(void) {
+  // create 6 channel structs and store in array
+  /*for(uint8_t i = 0; i < 6; i++) {
+    channels.index = i;
+    //channels[i] = &channel;
+  }*/
+  
   attachInterrupt(INPUT_CH1, isr_ch1, CHANGE);
-  attachInterrupt(INPUT_CH2, isr_ch2, FALLING);
-  attachInterrupt(INPUT_CH3, isr_ch3, FALLING);
-  attachInterrupt(INPUT_CH4, isr_ch4, FALLING);
-  attachInterrupt(INPUT_CH5, isr_ch5, FALLING);
-  attachInterrupt(INPUT_CH6, isr_ch6, FALLING);
+  attachInterrupt(INPUT_CH2, isr_ch2, CHANGE);
+  attachInterrupt(INPUT_CH3, isr_ch3, CHANGE);
+  attachInterrupt(INPUT_CH4, isr_ch4, CHANGE);
+  attachInterrupt(INPUT_CH5, isr_ch5, CHANGE);
+  attachInterrupt(INPUT_CH6, isr_ch6, CHANGE);
+}
+
+void ReceiverInputClass::update_rising_edge(uint8_t channel) {
+  channels[channel-1].last_rising_edge = micros();
 }
 
 void ReceiverInputClass::update_duty_cycle(uint8_t channel) {
-  channels[channel-1]->duty_cycle = (micros() - last_rising_edge) * 255 / PWM_PERIOD;
+  channels[channel-1].duty_cycle = (micros() - channels[channel-1].) * 255 / PWM_PERIOD;
 }
 
 void isr_ch1(void) {
   // if rising edge, update last_rising_edge
   if (digitalReadFast(INPUT_CH1) == 1) {
-    ReceiverInput.last_rising_edge = micros();
-    return;
+    ReceiverInput.update_rising_edge(1);
   }
-
-  ReceiverInput.update_duty_cycle(1);
+  else {
+    ReceiverInput.update_duty_cycle(1);
+  }
 }
 
 void isr_ch2(void) {
