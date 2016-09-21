@@ -7,6 +7,11 @@
 // period of pwm signal in microseconds
 #define PWM_PERIOD 14286
 
+// max duty cycle of the pwm signal so it can be scaled up for higher resolution
+#define MAX_DUTY_CYCLE 40
+
+#define DUTY_CYCLE_SCALE_FACTOR 255/MAX_DUTY_CYCLE
+
 // indexed from 1 because thats how the receiver is labelled physically
 #define INPUT_CH1 19
 #define INPUT_CH2 18

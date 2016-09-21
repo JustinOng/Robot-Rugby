@@ -24,7 +24,7 @@ void ReceiverInputClass::update_rising_edge(uint8_t channel) {
 }
 
 void ReceiverInputClass::update_duty_cycle(uint8_t channel) {
-  channels[channel-1].duty_cycle = (micros() - channels[channel-1].last_rising_edge) * 255 / PWM_PERIOD;
+  channels[channel-1].duty_cycle = (micros() - channels[channel-1].last_rising_edge) * DUTY_CYCLE_SCALE_FACTOR * 255 / PWM_PERIOD;
 }
 
 void isr_ch1(void) {
