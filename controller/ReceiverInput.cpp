@@ -24,7 +24,7 @@ void ReceiverInputClass::update_rising_edge(uint8_t channel) {
 }
 
 void ReceiverInputClass::update_duty_cycle(uint8_t channel) {
-  channels[channel-1].duty_cycle = (micros() - channels[channel-1].) * 255 / PWM_PERIOD;
+  channels[channel-1].duty_cycle = (micros() - channels[channel-1].last_rising_edge) * 255 / PWM_PERIOD;
 }
 
 void isr_ch1(void) {
@@ -38,23 +38,53 @@ void isr_ch1(void) {
 }
 
 void isr_ch2(void) {
-  ReceiverInput.update_duty_cycle(2);
+  // if rising edge, update last_rising_edge
+  if (digitalReadFast(INPUT_CH2) == 1) {
+    ReceiverInput.update_rising_edge(2);
+  }
+  else {
+    ReceiverInput.update_duty_cycle(2);
+  }
 }
 
 void isr_ch3(void) {
-  ReceiverInput.update_duty_cycle(3);
+  // if rising edge, update last_rising_edge
+  if (digitalReadFast(INPUT_CH3) == 1) {
+    ReceiverInput.update_rising_edge(3);
+  }
+  else {
+    ReceiverInput.update_duty_cycle(3);
+  }
 }
 
 void isr_ch4(void) {
-  ReceiverInput.update_duty_cycle(4);
+  // if rising edge, update last_rising_edge
+  if (digitalReadFast(INPUT_CH4) == 1) {
+    ReceiverInput.update_rising_edge(4);
+  }
+  else {
+    ReceiverInput.update_duty_cycle(4);
+  }
 }
 
 void isr_ch5(void) {
-  ReceiverInput.update_duty_cycle(5);
+  // if rising edge, update last_rising_edge
+  if (digitalReadFast(INPUT_CH5) == 1) {
+    ReceiverInput.update_rising_edge(5);
+  }
+  else {
+    ReceiverInput.update_duty_cycle(5);
+  }
 }
 
 void isr_ch6(void) {
-  ReceiverInput.update_duty_cycle(6);
+  // if rising edge, update last_rising_edge
+  if (digitalReadFast(INPUT_CH6) == 1) {
+    ReceiverInput.update_rising_edge(6);
+  }
+  else {
+    ReceiverInput.update_duty_cycle(6);
+  }
 }
 
 ReceiverInputClass ReceiverInput;
