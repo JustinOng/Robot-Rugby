@@ -22,6 +22,7 @@ class ReceiverInputClass {
     
     ReceiverInputClass(void);
     void update_duty_cycle(uint8_t channel);
+    void update_rising_edge(uint8_t channel);
     void begin(void);
 };
 

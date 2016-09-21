@@ -14,7 +14,7 @@ void setup() {
 void loop() {
   for(uint8_t channel = 0; channel < 6; channel++) {
     Serial1.print("CH");
-    Serial1.print(ReceiverInput.channels[channel].index);
+    Serial1.print(channel);
     Serial1.print(": ");
     Serial1.print(ReceiverInput.channels[channel].duty_cycle);
     Serial1.print(" ");
