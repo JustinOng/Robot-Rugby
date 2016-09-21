@@ -1,8 +1,14 @@
-#ifndef ReceiverInputIncluded
-#define ReceiverInputIncluded
+#ifndef ReceiverIncluded
+#define ReceiverIncluded
 
 #include <Arduino.h>
 #include "Channel.h"
+
+// time in us from last_rising_edge after which will be treated as stale value
+#define RECEIVER_TIMEOUT 15000
+
+// duty_cycle when joystick is not activated
+#define RECEIVER_ZERO 162
 
 // period of pwm signal in microseconds
 #define PWM_PERIOD 14286
@@ -20,18 +26,20 @@
 #define INPUT_CH5 15
 #define INPUT_CH6 14
 
-class ReceiverInputClass {
-  public:
+class ReceiverClass {
+  private:
     volatile Channel channels[6];
     volatile uint32_t last_rising_edge = 0;
-    
-    ReceiverInputClass(void);
+  public:
+    ReceiverClass(void);
     void update_duty_cycle(uint8_t channel);
     void update_rising_edge(uint8_t channel);
     void begin(void);
+
+    int8_t get_channel(uint8_t channel);
 };
 
-extern ReceiverInputClass ReceiverInput;
+extern ReceiverClass Receiver;
 
 void isr_ch1(void);
 void isr_ch2(void);
