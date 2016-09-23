@@ -8,14 +8,19 @@ class MotorsClass {
 
   public:
     enum Motor {
-      FrontLeft,
+      FrontLeft = 0,
       FrontRight,
       BackLeft,
-      BackRight
+      BackRight,
+      NUM_MOTORS
     };
+
+    const uint8_t pwm_pins[4] = {23, 22, 21, 20};
+    const uint8_t dir_pins[4] = {12, 11, 10, 9};
     
     MotorsClass(void);
-    void set_power(Motor motor, int8_t power);
+    void begin(void);
+    void set_power(Motor motor, int16_t power);
 };
 
 extern MotorsClass Motors;

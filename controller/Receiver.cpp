@@ -25,7 +25,11 @@ void ReceiverClass::update_duty_cycle(uint8_t channel) {
   channels[channel-1].duty_cycle = (micros() - channels[channel-1].last_rising_edge) * DUTY_CYCLE_SCALE_FACTOR * 255 / PWM_PERIOD;
 }
 
-int8_t ReceiverClass::get_channel(uint8_t channel) {
+int16_t ReceiverClass::scale(int16_t value, uint8_t channel) {
+  return max(min(map(value, min[channel-1], max[channel-1], -127, 127), 127), -127);
+}
+
+int16_t ReceiverClass::get_channel(uint8_t channel) {
   // if has timeout, return 0 so that the robot does not go "run away"
   if ((micros() - channels[channel-1].last_rising_edge) > RECEIVER_TIMEOUT) {
     return 0;
@@ -34,19 +38,20 @@ int8_t ReceiverClass::get_channel(uint8_t channel) {
   switch(channel) {
     case 1:
     case 6:
-      return 0;
+      return scale((int16_t) channels[0].duty_cycle - RECEIVER_ZERO, 1);
       break;
     case 2:
-      return 0;
+      return scale((((int16_t) channels[1].duty_cycle - RECEIVER_ZERO) + (channels[3].duty_cycle - RECEIVER_ZERO))/2, 2);
       break;
     case 3:
-      return 0;
+      return scale((int16_t) channels[2].duty_cycle - RECEIVER_ZERO, 3);
       break;
     case 4:
-      return 0;
+      return scale(((int16_t) channels[3].duty_cycle - RECEIVER_ZERO) - (channels[1].duty_cycle - RECEIVER_ZERO), 4);
       break;
     case 5:
-      return 0;
+      // duty cycle of ch5 is either 110 or 235, so just check if more/less than average (which is 172.5)
+      return channels[4].duty_cycle > 173;
       break;
     default:
       return 0;

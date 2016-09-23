@@ -8,7 +8,7 @@
 #define RECEIVER_TIMEOUT 15000
 
 // duty_cycle when joystick is not activated
-#define RECEIVER_ZERO 162
+#define RECEIVER_ZERO 173
 
 // period of pwm signal in microseconds
 #define PWM_PERIOD 14286
@@ -28,15 +28,30 @@
 
 class ReceiverClass {
   private:
-    volatile Channel channels[6];
     volatile uint32_t last_rising_edge = 0;
+
+    int8_t min[4] = {
+      -48,
+      -22,
+      -48,
+      -47
+    };
+
+    int8_t max[4] = {
+      46,
+      22,
+      46,
+      46
+    };
   public:
     ReceiverClass(void);
+    volatile Channel channels[6];
     void update_duty_cycle(uint8_t channel);
     void update_rising_edge(uint8_t channel);
     void begin(void);
 
-    int8_t get_channel(uint8_t channel);
+    int16_t get_channel(uint8_t channel);
+    int16_t scale(int16_t value, uint8_t channel);
 };
 
 extern ReceiverClass Receiver;
