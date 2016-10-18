@@ -1,0 +1,1 @@
+bolderflight-sbus was customised to accept 0xX4 as the end byte of the sbus packet
