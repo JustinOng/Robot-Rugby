@@ -44,10 +44,10 @@ class ReceiverClass {
     void loop(void);
 
     int16_t get_channel(uint8_t channel);
+    uint16_t lostFrames = 0;
   private:
     uint16_t channels[16];
     uint8_t failSafe = 1;
-    uint16_t lostFrames = 0;
     
     int16_t scale(int16_t value, uint8_t channel);
 };
