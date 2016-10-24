@@ -34,7 +34,7 @@ class ReceiverClass {
     uint8_t invert[4] = {
       1,
       0,
-      1,
+      0  ,
       1
     };
     

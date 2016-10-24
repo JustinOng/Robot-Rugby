@@ -12,6 +12,7 @@ class MotorsClass {
       FrontRight,
       BackLeft,
       BackRight,
+      Winch,
       NUM_MOTORS
     };
     
