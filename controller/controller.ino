@@ -1,7 +1,7 @@
 #include "Receiver.h"
 #include "Motors.h"
 
-#define SOLENOID_PULSE_LENGTH 50
+#define SOLENOID_PULSE_LENGTH 100
 #define SOLENOID_PIN 6
 
 elapsedMillis solenoid_active;
@@ -23,8 +23,8 @@ elapsedMillis last_motor_set;
 void loop() {
   static float theta = 0;
   static float theta_offset = 0;
-  static uint8_t pCH5 = 2;
-  uint8_t CH5 = Receiver.get_channel(5);
+  static uint8_t pCH9 = 2;
+  uint8_t CH9 = Receiver.get_channel(9);
 
   Receiver.loop();
   
@@ -49,7 +49,7 @@ void loop() {
     digitalWrite(SOLENOID_PIN, LOW);
   }
 
-  if (CH5 == 1 && pCH5 == 0) {
+  if (CH9 == 1 && pCH9 == 0) {
     // if switch was just pulled down
 
     theta_offset = theta;
@@ -76,5 +76,5 @@ void loop() {
     Motors.set_power(Motors.BackRight, - new_forward - new_right + Receiver.get_channel(1));
   }
   
-  pCH5 = CH5;
+  pCH9 = CH9;
 }
