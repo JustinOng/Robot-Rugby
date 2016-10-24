@@ -74,6 +74,13 @@ void loop() {
     Motors.set_power(Motors.FrontRight, - new_forward + new_right + Receiver.get_channel(1));
     Motors.set_power(Motors.BackLeft, new_forward - new_right + Receiver.get_channel(1));
     Motors.set_power(Motors.BackRight, - new_forward - new_right + Receiver.get_channel(1));
+
+    if (abs(Receiver.get_channel(3)) > 50) {
+      Motors.set_power(Motors.Winch, Receiver.get_channel(3));
+    }
+    else {
+      Motors.set_power(Motors.Winch, 0);
+    }
   }
   
   pCH9 = CH9;
