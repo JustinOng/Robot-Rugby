@@ -6,23 +6,23 @@ brian.taylor@bolderflight.com
 
 Copyright (c) 2016 Bolder Flight Systems
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
-and associated documentation files (the "Software"), to deal in the Software without restriction, 
-including without limitation the rights to use, copy, modify, merge, publish, distribute, 
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or 
+The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-// Teensy 3.0 || Teensy 3.1/3.2 || Teensy 3.5 || Teensy 3.6 || Teensy LC 
+// Teensy 3.0 || Teensy 3.1/3.2 || Teensy 3.5 || Teensy 3.6 || Teensy LC
 #if defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || \
 	defined(__MK66FX1M0__) || defined(__MKL26Z64__)
 
@@ -93,7 +93,7 @@ void SBUS::begin(){
 		SERIALPORT = _port;
 	#endif
 
-	#if defined(__MK64FX512__) || defined(__MK66FX1M0__) || defined(__MKL26Z64__)  // Teensy 3.5 || Teensy 3.6 || Teensy LC 
+	#if defined(__MK64FX512__) || defined(__MK66FX1M0__) || defined(__MKL26Z64__)  // Teensy 3.5 || Teensy 3.6 || Teensy LC
 		// begin the serial port for SBUS
 		_port->begin(100000,SERIAL_8E2_RXINV_TXINV);
 	#endif
@@ -153,7 +153,7 @@ bool SBUS::read(uint16_t* channels, uint8_t* failsafe, uint16_t* lostFrames){
     	// failsafe state
     	if (_payload[22] == _sbusFailSafe) {
       		*failsafe = 1;
-    	} 
+    	}
     	else{
       		*failsafe = 0;
     	}
@@ -215,7 +215,7 @@ void SBUS::write(uint16_t* channels){
 	/* assemble the SBUS packet */
 
 	// SBUS header
-	packet[0] = _sbusHeader; 
+	packet[0] = _sbusHeader;
 
 	// 16 channels of 11 bit data
   	packet[1] = (uint8_t) ((channels[0] & 0x07FF));
@@ -231,7 +231,7 @@ void SBUS::write(uint16_t* channels){
   	packet[11] = (uint8_t) ((channels[7] & 0x07FF)>>3);
   	packet[12] = (uint8_t) ((channels[8] & 0x07FF));
   	packet[13] = (uint8_t) ((channels[8] & 0x07FF)>>8 | (channels[9] & 0x07FF)<<3);
-  	packet[14] = (uint8_t) ((channels[9] & 0x07FF)>>5 | (channels[10] & 0x07FF)<<6);  
+  	packet[14] = (uint8_t) ((channels[9] & 0x07FF)>>5 | (channels[10] & 0x07FF)<<6);
   	packet[15] = (uint8_t) ((channels[10] & 0x07FF)>>2);
   	packet[16] = (uint8_t) ((channels[10] & 0x07FF)>>10 | (channels[11] & 0x07FF)<<1);
   	packet[17] = (uint8_t) ((channels[11] & 0x07FF)>>7 | (channels[12] & 0x07FF)<<4);
@@ -248,7 +248,7 @@ void SBUS::write(uint16_t* channels){
 	packet[24] = _sbusFooter;
 
 	#if defined(__MK20DX128__) || defined(__MK20DX256__) // Teensy 3.0 || Teensy 3.1/3.2
-		// use ISR to send byte at a time, 
+		// use ISR to send byte at a time,
 		// 130 us between bytes to emulate 2 stop bits
 		noInterrupts();
 		memcpy(&PACKET,&packet,sizeof(packet));
