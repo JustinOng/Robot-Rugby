@@ -188,6 +188,10 @@ bool SBUS::parse(){
     		// strip off the data
     		if((_fpos-1) < _payloadSize){
           _payload[_fpos-1] = c;
+
+					//Serial1.print(c, HEX);
+					//Serial1.print(" ");
+
           _fpos++;
     		}
 
@@ -195,6 +199,7 @@ bool SBUS::parse(){
     		if((_fpos-1) == _payloadSize){
           if((c & 0x0F) == 0x04){
             _fpos = 0;
+						//Serial1.print("\r\n");
             return true;
           }
           else{
