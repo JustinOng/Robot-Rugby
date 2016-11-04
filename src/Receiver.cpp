@@ -3,7 +3,7 @@
 
 SBUS x8r(2);
 ReceiverClass::ReceiverClass(void) {
-  
+
 }
 
 void ReceiverClass::begin(void) {
@@ -38,11 +38,14 @@ int16_t ReceiverClass::get_channel(uint8_t channel) {
       else {
         return scaled;
       }
-      
+
       break;
-    case 5:
     case 6:
     case 7:
+      if (channels[channel-1] > 1100) return 2;
+      if (channels[channel-1] > 200) return 1;
+      return 0;
+      break;
     case 8:
     case 11:
     case 12:
@@ -52,9 +55,11 @@ int16_t ReceiverClass::get_channel(uint8_t channel) {
     case 16:
       return channels[channel-1];
       break;
+    case 5:
     case 9:
     case 10:
       return channels[channel-1] > 200;
+      break;
     default:
       return 0;
   }

@@ -4,8 +4,10 @@
 #include "Motors.h"
 #include <Encoder.h>
 
-#define SOLENOID_PULSE_LENGTH 100
-#define SOLENOID_PIN 6
+#define WINCH_SOLENOID_PULSE_LENGTH 50
+#define WINCH_SOLENOID_PIN 6
+
+#define GRIPPER_SOLENOID_PIN 5
 
 #define PRINT_CONTROLLER_VALUES 1
 
@@ -15,10 +17,11 @@ void setup() {
 
   Motors.begin();
   Receiver.begin();
-  pinMode(SOLENOID_PIN, OUTPUT);
+  pinMode(WINCH_SOLENOID_PIN, OUTPUT);
+  pinMode(GRIPPER_SOLENOID_PIN, OUTPUT);
   pinMode(13, OUTPUT);
 
-  solenoid_active = SOLENOID_PULSE_LENGTH + 1;
+  solenoid_active = WINCH_SOLENOID_PULSE_LENGTH + 1;
 
   Serial1.println("Setup finished!");
 }
@@ -32,10 +35,15 @@ void loop() {
   static float theta_offset = 0;
   static uint8_t pCH9 = 2;
   static uint8_t pCH10 = 2;
+  static uint8_t pCH5 = 2;
   uint8_t CH9 = Receiver.get_channel(9);
   uint8_t CH10 = Receiver.get_channel(10);
+  uint8_t CH5 = Receiver.get_channel(5);
 
   static uint8_t winching = 0;
+
+  static elapsedMillis gripping_start;
+  static uint8_t gripping = 0;
 
   Receiver.loop();
 
@@ -46,8 +54,6 @@ void loop() {
     last_printed = 0;
 
     #ifdef PRINT_CONTROLLER_VALUES
-    Serial1.print("F: ");
-    Serial1.println(Receiver.failSafe);
     for(uint8_t channel = 1; channel <= 16; channel++) {
       Serial1.print("CH");
       Serial1.print(channel);
@@ -61,11 +67,11 @@ void loop() {
     digitalWrite(13, !digitalRead(13));
   }
 
-  if (solenoid_active < SOLENOID_PULSE_LENGTH) {
-    digitalWrite(SOLENOID_PIN, HIGH);
+  if (solenoid_active < WINCH_SOLENOID_PULSE_LENGTH) {
+    digitalWrite(WINCH_SOLENOID_PIN, HIGH);
   }
   else {
-    digitalWrite(SOLENOID_PIN, LOW);
+    digitalWrite(WINCH_SOLENOID_PIN, LOW);
   }
 
   if (CH9 == 1 && pCH9 == 0) {
@@ -78,6 +84,13 @@ void loop() {
   if (CH10 == 1 && pCH10 == 0) {
     winching = 1;
   }
+
+  /*if (CH5 == 1 && pCH5 == 0) {
+    gripping = 1;
+    gripping_start = 0;
+  }*/
+
+  digitalWrite(GRIPPER_SOLENOID_PIN, Receiver.get_channel(5));
 
   if (last_motor_set > 50) {
     float theta_corrected = theta - theta_offset;
@@ -112,7 +125,7 @@ void loop() {
         }
       }
       else if (winching == 2) {
-        if (winchEncoder.read() < 9000) {
+        if (winchEncoder.read() < 7000) {
           Motors.set_power(Motors.Winch, 100);
         }
         else {
@@ -122,15 +135,24 @@ void loop() {
       }
     }
     else {
-      if (abs(Receiver.get_channel(3)) > 50) {
+      //Motors.set_power(Motors.Winch, 0);
+      if (Receiver.get_channel(7) == 1 && abs(Receiver.get_channel(3)) > 50) {
         Motors.set_power(Motors.Winch, Receiver.get_channel(3));
       }
       else {
         Motors.set_power(Motors.Winch, 0);
       }
     }
+
+    if (Receiver.get_channel(7) == 2 && abs(Receiver.get_channel(3)) > 50) {
+      Motors.set_power(Motors.Lift, Receiver.get_channel(3));
+    }
+    else {
+      Motors.set_power(Motors.Lift, 0);
+    }
   }
 
   pCH9 = CH9;
   pCH10 = CH10;
+  pCH5 = CH5;
 }

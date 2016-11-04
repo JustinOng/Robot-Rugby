@@ -13,9 +13,10 @@ class MotorsClass {
       BackLeft,
       BackRight,
       Winch,
+      Lift,
       NUM_MOTORS
     };
-    
+
     MotorsClass(void);
     void begin(void);
     void set_power(Motor motor, int16_t power);
