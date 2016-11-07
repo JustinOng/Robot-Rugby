@@ -4,12 +4,19 @@
 #include "Motors.h"
 #include <Encoder.h>
 
+#include <FastLED.h>
+
+#define BATT_LIGHT_PIN 17
+
 #define WINCH_SOLENOID_PULSE_LENGTH 50
 #define WINCH_SOLENOID_PIN 6
 
 #define GRIPPER_SOLENOID_PIN 5
 
 #define PRINT_CONTROLLER_VALUES 1
+
+CRGB BATT_LEDs[3];
+CRGB STATUS_LEDs[2];
 
 elapsedMillis solenoid_active;
 void setup() {
@@ -22,6 +29,16 @@ void setup() {
   pinMode(13, OUTPUT);
 
   solenoid_active = WINCH_SOLENOID_PULSE_LENGTH + 1;
+
+  //FastLED.addLeds<NEOPIXEL, BATT_LIGHT_PIN>(BATT_LEDs, 3);
+
+  FastLED.addLeds<NEOPIXEL, 16>(STATUS_LEDs, 2);
+  //FastLED.setBrightness(20);
+
+  //BATT_LEDs[0] = CRGB::Red; FastLED.show();
+  STATUS_LEDs[0] = CRGB::Blue;
+  STATUS_LEDs[1] = CRGB::Blue;
+  FastLED.show();
 
   Serial1.println("Setup finished!");
 }
