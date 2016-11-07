@@ -3,10 +3,7 @@
 #include "Receiver.h"
 #include "Motors.h"
 #include <Encoder.h>
-
-#include <FastLED.h>
-
-#define BATT_LIGHT_PIN 17
+#include "Battery_Monitor.h"
 
 #define WINCH_SOLENOID_PULSE_LENGTH 50
 #define WINCH_SOLENOID_PIN 6
@@ -15,30 +12,18 @@
 
 #define PRINT_CONTROLLER_VALUES 1
 
-CRGB BATT_LEDs[3];
-CRGB STATUS_LEDs[2];
-
 elapsedMillis solenoid_active;
 void setup() {
   Serial1.begin(115200);
 
   Motors.begin();
   Receiver.begin();
+  Battery_Monitor.begin();
   pinMode(WINCH_SOLENOID_PIN, OUTPUT);
   pinMode(GRIPPER_SOLENOID_PIN, OUTPUT);
   pinMode(13, OUTPUT);
 
   solenoid_active = WINCH_SOLENOID_PULSE_LENGTH + 1;
-
-  //FastLED.addLeds<NEOPIXEL, BATT_LIGHT_PIN>(BATT_LEDs, 3);
-
-  FastLED.addLeds<NEOPIXEL, 16>(STATUS_LEDs, 2);
-  //FastLED.setBrightness(20);
-
-  //BATT_LEDs[0] = CRGB::Red; FastLED.show();
-  STATUS_LEDs[0] = CRGB::Blue;
-  STATUS_LEDs[1] = CRGB::Blue;
-  FastLED.show();
 
   Serial1.println("Setup finished!");
 }
@@ -62,6 +47,7 @@ void loop() {
   static elapsedMillis gripping_start;
   static uint8_t gripping = 0;
 
+  Battery_Monitor.loop();
   Receiver.loop();
 
   /*Serial1.print("Encoder: ");
