@@ -11,24 +11,24 @@ class ReceiverClass {
     volatile uint32_t last_rising_edge = 0;
 
     int16_t min[4] = {
-      419,
-      360,
       368,
-      323
+      368,
+      368,
+      368
     };
 
     int16_t max[4] = {
-      1732,
-      1673,
       1680,
-      1635
+      1680,
+      1680,
+      1680
     };
 
     int16_t ctr[4] = {
-      1067,
       1014,
       1024,
-      980
+      1024,
+      1028
     };
 
     uint8_t invert[4] = {
@@ -45,8 +45,8 @@ class ReceiverClass {
 
     int16_t get_channel(uint8_t channel);
     uint8_t failSafe = 1;
-  private:
     uint16_t channels[16];
+  private:
     uint16_t lostFrames = 0;
 
     int16_t scale(int16_t value, uint8_t channel);

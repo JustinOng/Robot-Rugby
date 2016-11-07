@@ -40,13 +40,16 @@ int16_t ReceiverClass::get_channel(uint8_t channel) {
       }
 
       break;
+    case 5:
     case 6:
     case 7:
+    case 8:
+    case 9:
+    case 10:
       if (channels[channel-1] > 1100) return 2;
       if (channels[channel-1] > 200) return 1;
       return 0;
       break;
-    case 8:
     case 11:
     case 12:
     case 13:
@@ -54,11 +57,6 @@ int16_t ReceiverClass::get_channel(uint8_t channel) {
     case 15:
     case 16:
       return channels[channel-1];
-      break;
-    case 5:
-    case 9:
-    case 10:
-      return channels[channel-1] > 200;
       break;
     default:
       return 0;
