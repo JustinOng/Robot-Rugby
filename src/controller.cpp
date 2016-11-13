@@ -35,12 +35,6 @@ Encoder winchEncoder(11, 12);
 void loop() {
   static float theta = 0;
   static float theta_offset = 0;
-  static uint8_t pCH7 = 2;
-  static uint8_t pCH10 = 2;
-  static uint8_t pCH5 = 2;
-  uint8_t CH7 = Receiver.get_channel(7);
-  uint8_t CH10 = Receiver.get_channel(10);
-  uint8_t CH5 = Receiver.get_channel(5);
 
   static uint8_t winching = 0;
 
@@ -77,14 +71,14 @@ void loop() {
     digitalWrite(WINCH_SOLENOID_PIN, LOW);
   }
 
-  if (CH10 && pCH10 == 0) {
+  if (Receiver.get_edge(10, ReceiverClass::RISING_EDGE)) {
     // if switch was just pulled down
 
     //theta_offset = theta;
     solenoid_active = 0;
   }
 
-  if (CH7 && pCH7 == 0) {
+  if (Receiver.get_edge(7, ReceiverClass::FALLING_EDGE)) {
     winching = 1;
   }
 
@@ -156,8 +150,4 @@ void loop() {
       Motors.set_power(Motors.Lift, 0);
     }
   }
-
-  pCH7 = CH7;
-  pCH10 = CH10;
-  pCH5 = CH5;
 }

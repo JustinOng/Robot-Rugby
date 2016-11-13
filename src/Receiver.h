@@ -43,9 +43,18 @@ class ReceiverClass {
     void begin(void);
     void loop(void);
 
+    enum Edge {
+      FALLING_EDGE,
+      RISING_EDGE
+    };
+
     int16_t get_channel(uint8_t channel);
     uint8_t failSafe = 1;
     uint16_t channels[16];
+    uint16_t pChannels[16];
+
+    uint8_t get_edge(uint8_t channel, Edge edge);
+
   private:
     uint16_t lostFrames = 0;
 
