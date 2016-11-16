@@ -5,6 +5,8 @@
 #include <Encoder.h>
 #include "Battery_Monitor.h"
 
+#include "Adafruit_MCP23008.h"
+
 #define WINCH_SOLENOID_PULSE_LENGTH 50
 #define WINCH_SOLENOID_PIN 6
 
@@ -13,6 +15,9 @@
 #define PRINT_CONTROLLER_VALUES 1
 
 elapsedMillis solenoid_active;
+
+Adafruit_MCP23008 mcp;
+
 void setup() {
   Serial1.begin(115200);
 
@@ -24,6 +29,13 @@ void setup() {
   pinMode(13, OUTPUT);
 
   solenoid_active = WINCH_SOLENOID_PULSE_LENGTH + 1;
+
+  mcp.begin();
+
+  for(uint8_t i = 0; i < 8; i++) {
+    mcp.digitalWrite(i, LOW);
+    mcp.pinMode(i, OUTPUT);
+  }
 
   Serial1.println("Setup finished!");
 }
@@ -55,8 +67,8 @@ void loop() {
       Serial1.print("CH");
       Serial1.print(channel);
       Serial1.print(": ");
-      Serial1.print(Receiver.channels[channel-1]);
-      //Serial1.print(Receiver.get_channel(channel));
+      //Serial1.print(Receiver.channels[channel-1]);
+      Serial1.print(Receiver.get_channel(channel));
         Serial1.print(" ");
     }
     Serial1.print("\r\n");
@@ -76,10 +88,22 @@ void loop() {
 
     //theta_offset = theta;
     solenoid_active = 0;
+    Serial1.println("Winch trigger activated!");
   }
 
   if (Receiver.get_edge(7, ReceiverClass::FALLING_EDGE)) {
     winching = 1;
+  }
+
+  if (Receiver.get_channel(6) == 0) {
+    for(uint8_t i = 0; i < 8; i++) {
+      mcp.digitalWrite(i, LOW);
+    }
+  }
+  else {
+    for(uint8_t i = 0; i < 8; i++) {
+      mcp.digitalWrite(i, HIGH);
+    }
   }
 
   theta_offset = Receiver.get_channel(9) ? 180 : 0;
