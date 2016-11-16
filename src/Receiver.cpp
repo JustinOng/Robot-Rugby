@@ -11,11 +11,11 @@ void ReceiverClass::begin(void) {
 }
 
 void ReceiverClass::loop(void) {
-  if (x8r.read(&channels[0], &failSafe, &lostFrames)) {
-    for(uint8_t i = 0; i < 16; i++) {
-      pChannels[i] = get_channel(i);
-    }
+  for(uint8_t i = 1; i <= 10; i++) {
+    pChannels[i] = get_channel(i);
   }
+
+  x8r.read(&channels[0], &failSafe, &lostFrames);
 }
 
 int16_t ReceiverClass::scale(int16_t value, uint8_t channel) {
@@ -23,7 +23,7 @@ int16_t ReceiverClass::scale(int16_t value, uint8_t channel) {
 }
 
 uint8_t ReceiverClass::get_edge(uint8_t channel, Edge edge) {
-  if (pChannels[channel] != get_channel(channel) && get_channel(channel) == (uint8_t) edge) {
+  if (!!pChannels[channel] != !!get_channel(channel) && !!get_channel(channel) == ((uint8_t) edge)) {
     return 1;
   }
 
