@@ -6,10 +6,20 @@ Battery_Monitor_Class::Battery_Monitor_Class(void) {
 
 void Battery_Monitor_Class::begin(void) {
   controller = &FastLED.addLeds<NEOPIXEL, BATT_LEDS_PIN>(leds, NUM_LEDS);
+
+  for(uint8_t pin = 0; pin < NUM_CELL_PINS; pin++) {
+    readingAverage[pin] = analogRead(CELL_PINS[pin]) * SAMPLES;
+  }
 }
 
 void Battery_Monitor_Class::loop(void) {
   static elapsedMillis elapsed;
+
+  for(uint8_t pin = 0; pin < NUM_CELL_PINS; pin++) {
+    readingAverage[pin] -= readingAverage[pin] / 10;
+
+    readingAverage[pin] += analogRead(CELL_PINS[pin]);
+  }
 
   if (elapsed < THROTTLE_MS) {
     return;
@@ -18,7 +28,7 @@ void Battery_Monitor_Class::loop(void) {
   elapsed = 0;
 
   for(uint8_t pin = 0; pin < NUM_CELL_PINS; pin++) {
-    uint16_t adc_value = analogRead(CELL_PINS[pin]);
+    uint16_t adc_value = readingAverage[pin] / SAMPLES;
 
     if (pin < (NUM_CELL_PINS-1)) {
       // subtract the next pin value because the balance leads are in series

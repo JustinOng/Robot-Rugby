@@ -14,6 +14,8 @@
 #define BATT_LEDS_PIN 17
 #define NUM_LEDS 3
 
+#define SAMPLES 10
+
 /*
   define the voltage divider that scales down the maximum voltage from the
   MAIN is the value of the resistor that is connected between Ax and GND
@@ -34,6 +36,8 @@ class Battery_Monitor_Class {
     const uint8_t CELL_PINS[NUM_CELL_PINS] = { 23, 22, 21 };
     // which index in the strip to display the status of the corresponding pin above
     const uint8_t LED_INDEX[NUM_CELL_PINS] = { 0, 1, 2 };
+
+    uint16_t readingAverage[NUM_CELL_PINS] = {0};
 
     CRGB leds[NUM_LEDS];
     CLEDController * controller;
