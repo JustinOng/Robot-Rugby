@@ -59,7 +59,10 @@ void loop() {
   /*Serial1.print("Encoder: ");
   Serial1.println(winchEncoder.read());*/
 
-  if (last_printed > 100) {
+  /*Serial1.print("Hall A1: ");
+  Serial1.println(analogRead(15));*/
+
+  if (last_printed > 500) {
     last_printed = 0;
 
     #ifdef PRINT_CONTROLLER_VALUES
@@ -168,7 +171,15 @@ void loop() {
     }
 
     if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 50) {
-      Motors.set_power(Motors.Lift, Receiver.get_channel(3));
+      if (Receiver.get_channel(3) > 0 && analogRead(A1) > 480) {
+        Motors.set_power(Motors.Lift, Receiver.get_channel(3));
+      }
+      else if (Receiver.get_channel(3) < 0) {
+        Motors.set_power(Motors.Lift, Receiver.get_channel(3));
+      }
+      else {
+        Motors.set_power(Motors.Lift, 0);
+      }
     }
     else {
       Motors.set_power(Motors.Lift, 0);
