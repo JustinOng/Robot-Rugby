@@ -6,17 +6,25 @@
 #include "Battery_Monitor.h"
 
 #include "Adafruit_MCP23008.h"
+#include "NewPing.h"
 
 #define WINCH_SOLENOID_PULSE_LENGTH 50
 #define WINCH_SOLENOID_PIN 11
 
 #define GRIPPER_SOLENOID_PIN 12
 
-#define PRINT_CONTROLLER_VALUES 1
+#define ULTRASONIC_1_PIN 32
+#define ULTRASONIC_2_PIN 33
+#define ULTRASONIC_MAX 50
+
+//#define PRINT_CONTROLLER_VALUES 1
 
 elapsedMillis solenoid_active;
 
 Adafruit_MCP23008 mcp;
+
+NewPing sonar1(ULTRASONIC_1_PIN, ULTRASONIC_1_PIN, ULTRASONIC_MAX);
+NewPing sonar2(ULTRASONIC_2_PIN, ULTRASONIC_2_PIN, ULTRASONIC_MAX);
 
 void setup() {
   Serial1.begin(115200);
@@ -45,7 +53,8 @@ void setup() {
 
 elapsedMillis last_printed;
 elapsedMillis last_motor_set;
-Encoder winchEncoder(11, 12);
+elapsedMillis last_ping;
+Encoder winchEncoder(2, 3);
 
 void loop() {
   static float theta = 0;
@@ -64,6 +73,19 @@ void loop() {
 
   /*Serial1.print("Hall A1: ");
   Serial1.println(analogRead(15));*/
+
+  /*Serial1.print("Hall A): ");
+  Serial1.println(analogRead(A0));*/
+
+  if (last_ping > 100) {
+    last_ping = 0;
+    Serial1.print("Ping 1: ");
+    Serial1.print((float) sonar1.ping() / US_ROUNDTRIP_CM);
+    Serial1.println("cm");
+    Serial1.print("Ping 2: ");
+    Serial1.print((float) sonar2.ping() / US_ROUNDTRIP_CM);
+    Serial1.println("cm");
+  }
 
   if (last_printed > 500) {
     last_printed = 0;
@@ -143,7 +165,7 @@ void loop() {
     if (winching) {
       if (winching == 1) {
         // not in latch area yet, keep winching
-        if (analogRead(A0) > 280) {
+        if (analogRead(A0) > 450) {
           Motors.set_power(Motors.Winch, -100);
         }
         else {
