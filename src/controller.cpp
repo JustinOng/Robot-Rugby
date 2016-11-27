@@ -2,8 +2,8 @@
 
 #include "Receiver.h"
 #include "Motors.h"
-#include <Encoder.h>
 #include "Battery_Monitor.h"
+#include "Kicker.h"
 
 #include "Adafruit_MCP23008.h"
 #include "NewPing.h"
@@ -13,8 +13,6 @@
 #define ULTRASONIC_MAX 50
 
 //#define PRINT_CONTROLLER_VALUES 1
-
-elapsedMillis solenoid_active;
 
 Adafruit_MCP23008 mcp;
 
@@ -27,14 +25,13 @@ void setup() {
   Motors.begin();
   Receiver.begin();
   Battery_Monitor.begin();
-  pinMode(WINCH_SOLENOID_PIN, OUTPUT);
+  Kicker.begin();
+
   pinMode(GRIPPER_SOLENOID_PIN, OUTPUT);
   pinMode(13, OUTPUT);
 
   pinMode(24, OUTPUT);
   digitalWrite(24, HIGH);
-
-  solenoid_active = WINCH_SOLENOID_PULSE_LENGTH + 1;
 
   mcp.begin();
 
@@ -49,7 +46,6 @@ void setup() {
 elapsedMillis last_printed;
 elapsedMillis last_motor_set;
 elapsedMillis last_ping;
-Encoder winchEncoder(2, 3);
 
 void loop() {
   static float theta = 0;
@@ -99,19 +95,8 @@ void loop() {
     digitalWrite(13, !digitalRead(13));
   }
 
-  if (solenoid_active < WINCH_SOLENOID_PULSE_LENGTH) {
-    digitalWrite(WINCH_SOLENOID_PIN, HIGH);
-  }
-  else {
-    digitalWrite(WINCH_SOLENOID_PIN, LOW);
-  }
-
   if (Receiver.get_edge(10, ReceiverClass::RISING_EDGE)) {
-    // if switch was just pulled down
-
-    //theta_offset = theta;
-    solenoid_active = 0;
-    Serial1.println("Winch trigger activated!");
+    Kicker.release();
   }
 
   if (Receiver.get_edge(7, ReceiverClass::FALLING_EDGE)) {
@@ -130,11 +115,6 @@ void loop() {
   }
 
   theta_offset = Receiver.get_channel(9) ? 180 : 0;
-
-  /*if (CH5 == 1 && pCH5 == 0) {
-    gripping = 1;
-    gripping_start = 0;
-  }*/
 
   digitalWrite(GRIPPER_SOLENOID_PIN, Receiver.get_channel(5));
 
@@ -157,30 +137,7 @@ void loop() {
     Motors.set_power(Motors.BackLeft, new_forward - new_right + Receiver.get_channel(1));
     Motors.set_power(Motors.BackRight, - new_forward - new_right + Receiver.get_channel(1));
 
-    if (winching) {
-      if (winching == 1) {
-        // not in latch area yet, keep winching
-        if (analogRead(A0) > 450) {
-          Motors.set_power(Motors.Winch, -100);
-        }
-        else {
-          // has reached threshold, stop motors, reset encoder
-          Motors.set_power(Motors.Winch, 0);
-          winching = 2;
-          winchEncoder.write(0);
-        }
-      }
-      else if (winching == 2) {
-        if (winchEncoder.read() < 7000) {
-          Motors.set_power(Motors.Winch, 100);
-        }
-        else {
-          Motors.set_power(Motors.Winch, 0);
-          winching = 0;
-        }
-      }
-    }
-    else {
+    if (!Kicker.is_winching()) {
       //Motors.set_power(Motors.Winch, 0);
       if (Receiver.get_channel(8) == 1 && abs(Receiver.get_channel(3)) > 50) {
         Motors.set_power(Motors.Winch, Receiver.get_channel(3));
