@@ -47,9 +47,6 @@ elapsedMillis last_printed;
 elapsedMillis last_ping;
 
 void loop() {
-  static float theta = 0;
-  static float theta_offset = 0;
-
   Battery_Monitor.loop();
   Receiver.loop();
   Kicker.loop();
@@ -109,26 +106,19 @@ void loop() {
     }
   }
 
-  theta_offset = Receiver.get_channel(9) ? 180 : 0;
-
   digitalWrite(GRIPPER_SOLENOID_PIN, Receiver.get_channel(5));
-
-  float theta_corrected = theta - theta_offset;
-
-  if (theta_corrected < 0) theta_corrected += 360;
-
-  float theta_rads = theta_corrected * 71 / 4068;
 
   int16_t forward = Receiver.get_channel(2);
   int16_t right = Receiver.get_channel(4);
 
-  int16_t new_right = cos(theta_rads) * right - sin(theta_rads) * forward;
-  int16_t new_forward = sin(theta_rads) * right + cos(theta_rads) * forward;
+  if (Receiver.get_channel(9)) {
+    forward *= -1;
+  }
 
-  Motors.set_power(Motors.FrontLeft, new_forward + new_right + Receiver.get_channel(1));
-  Motors.set_power(Motors.FrontRight, - new_forward + new_right + Receiver.get_channel(1));
-  Motors.set_power(Motors.BackLeft, new_forward - new_right + Receiver.get_channel(1));
-  Motors.set_power(Motors.BackRight, - new_forward - new_right + Receiver.get_channel(1));
+  Motors.set_power(Motors.FrontLeft, forward + right + Receiver.get_channel(1));
+  Motors.set_power(Motors.FrontRight, - forward + right + Receiver.get_channel(1));
+  Motors.set_power(Motors.BackLeft, forward - right + Receiver.get_channel(1));
+  Motors.set_power(Motors.BackRight, - forward - right + Receiver.get_channel(1));
 
   if (!Kicker.is_winching()) {
     //Motors.set_power(Motors.Winch, 0);
