@@ -17,6 +17,8 @@ class MotorsClass {
       NUM_MOTORS
     };
 
+    int8_t current_motor_power[NUM_MOTORS] = {0};
+
     MotorsClass(void);
     void begin(void);
     void set_power(Motor motor, int16_t power);
