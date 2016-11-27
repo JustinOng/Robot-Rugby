@@ -8,13 +8,8 @@
 #include "Adafruit_MCP23008.h"
 #include "NewPing.h"
 
-#define WINCH_SOLENOID_PULSE_LENGTH 50
-#define WINCH_SOLENOID_PIN 11
+#include "pin_config.h"
 
-#define GRIPPER_SOLENOID_PIN 12
-
-#define ULTRASONIC_1_PIN 32
-#define ULTRASONIC_2_PIN 33
 #define ULTRASONIC_MAX 50
 
 //#define PRINT_CONTROLLER_VALUES 1

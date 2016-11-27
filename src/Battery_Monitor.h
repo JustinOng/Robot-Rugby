@@ -21,6 +21,7 @@
   MAIN is the value of the resistor that is connected between Ax and GND
   SIDE is the value of the resistor that is connected between Vcc and Ax
 */
+
 #define VOLTAGE_DIVIDER_MAIN 56
 #define VOLTAGE_DIVIDER_SIDE 18
 
