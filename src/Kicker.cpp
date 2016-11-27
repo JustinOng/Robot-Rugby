@@ -48,7 +48,7 @@ void KickerClass::release(void) {
 }
 
 void KickerClass::reload(void) {
-
+  winching = 1;
 }
 
 uint8_t KickerClass::is_winching(void) {

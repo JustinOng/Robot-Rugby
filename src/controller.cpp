@@ -50,13 +50,11 @@ void loop() {
   static float theta = 0;
   static float theta_offset = 0;
 
-  static uint8_t winching = 0;
-
   static elapsedMillis gripping_start;
   static uint8_t gripping = 0;
-
   Battery_Monitor.loop();
   Receiver.loop();
+  Kicker.loop();
 
   /*Serial1.print("Encoder: ");
   Serial1.println(winchEncoder.read());*/
@@ -99,7 +97,7 @@ void loop() {
   }
 
   if (Receiver.get_edge(7, ReceiverClass::FALLING_EDGE)) {
-    winching = 1;
+    Kicker.reload();
   }
 
   if (Receiver.get_channel(6) == 0) {
