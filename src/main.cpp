@@ -4,20 +4,15 @@
 #include "Motors.h"
 #include "Battery_Monitor.h"
 #include "Kicker.h"
+#include "TeeAligner.h"
 
 #include "Adafruit_MCP23008.h"
-#include "NewPing.h"
 
 #include "pin_config.h"
-
-#define ULTRASONIC_MAX 50
 
 //#define PRINT_CONTROLLER_VALUES 1
 
 Adafruit_MCP23008 mcp;
-
-NewPing sonar1(ULTRASONIC_1_PIN, ULTRASONIC_1_PIN, ULTRASONIC_MAX);
-NewPing sonar2(ULTRASONIC_2_PIN, ULTRASONIC_2_PIN, ULTRASONIC_MAX);
 
 void setup() {
   Serial1.begin(115200);
@@ -59,16 +54,6 @@ void loop() {
 
   /*Serial1.print("Hall A): ");
   Serial1.println(analogRead(A0));*/
-
-  if (last_ping > 100) {
-    last_ping = 0;
-    Serial1.print("Ping 1: ");
-    Serial1.print((float) sonar1.ping() / US_ROUNDTRIP_CM);
-    Serial1.println("cm");
-    Serial1.print("Ping 2: ");
-    Serial1.print((float) sonar2.ping() / US_ROUNDTRIP_CM);
-    Serial1.println("cm");
-  }
 
   if (last_printed > 500) {
     last_printed = 0;
