@@ -44,7 +44,6 @@ void setup() {
 }
 
 elapsedMillis last_printed;
-elapsedMillis last_motor_set;
 elapsedMillis last_ping;
 
 void loop() {
@@ -118,48 +117,45 @@ void loop() {
 
   digitalWrite(GRIPPER_SOLENOID_PIN, Receiver.get_channel(5));
 
-  if (last_motor_set > 50) {
-    float theta_corrected = theta - theta_offset;
+  float theta_corrected = theta - theta_offset;
 
-    if (theta_corrected < 0) theta_corrected += 360;
+  if (theta_corrected < 0) theta_corrected += 360;
 
-    float theta_rads = theta_corrected * 71 / 4068;
-    last_motor_set = 0;
+  float theta_rads = theta_corrected * 71 / 4068;
 
-    int16_t forward = Receiver.get_channel(2);
-    int16_t right = Receiver.get_channel(4);
+  int16_t forward = Receiver.get_channel(2);
+  int16_t right = Receiver.get_channel(4);
 
-    int16_t new_right = cos(theta_rads) * right - sin(theta_rads) * forward;
-    int16_t new_forward = sin(theta_rads) * right + cos(theta_rads) * forward;
+  int16_t new_right = cos(theta_rads) * right - sin(theta_rads) * forward;
+  int16_t new_forward = sin(theta_rads) * right + cos(theta_rads) * forward;
 
-    Motors.set_power(Motors.FrontLeft, new_forward + new_right + Receiver.get_channel(1));
-    Motors.set_power(Motors.FrontRight, - new_forward + new_right + Receiver.get_channel(1));
-    Motors.set_power(Motors.BackLeft, new_forward - new_right + Receiver.get_channel(1));
-    Motors.set_power(Motors.BackRight, - new_forward - new_right + Receiver.get_channel(1));
+  Motors.set_power(Motors.FrontLeft, new_forward + new_right + Receiver.get_channel(1));
+  Motors.set_power(Motors.FrontRight, - new_forward + new_right + Receiver.get_channel(1));
+  Motors.set_power(Motors.BackLeft, new_forward - new_right + Receiver.get_channel(1));
+  Motors.set_power(Motors.BackRight, - new_forward - new_right + Receiver.get_channel(1));
 
-    if (!Kicker.is_winching()) {
-      //Motors.set_power(Motors.Winch, 0);
-      if (Receiver.get_channel(8) == 1 && abs(Receiver.get_channel(3)) > 50) {
-        Motors.set_power(Motors.Winch, Receiver.get_channel(3));
-      }
-      else {
-        Motors.set_power(Motors.Winch, 0);
-      }
+  if (!Kicker.is_winching()) {
+    //Motors.set_power(Motors.Winch, 0);
+    if (Receiver.get_channel(8) == 1 && abs(Receiver.get_channel(3)) > 50) {
+      Motors.set_power(Motors.Winch, Receiver.get_channel(3));
     }
+    else {
+      Motors.set_power(Motors.Winch, 0);
+    }
+  }
 
-    if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 50) {
-      if (Receiver.get_channel(3) > 0 && analogRead(A1) > 480) {
-        Motors.set_power(Motors.Lift, Receiver.get_channel(3));
-      }
-      else if (Receiver.get_channel(3) < 0) {
-        Motors.set_power(Motors.Lift, Receiver.get_channel(3));
-      }
-      else {
-        Motors.set_power(Motors.Lift, 0);
-      }
+  if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 50) {
+    if (Receiver.get_channel(3) > 0 && analogRead(A1) > 480) {
+      Motors.set_power(Motors.Lift, Receiver.get_channel(3));
+    }
+    else if (Receiver.get_channel(3) < 0) {
+      Motors.set_power(Motors.Lift, Receiver.get_channel(3));
     }
     else {
       Motors.set_power(Motors.Lift, 0);
     }
+  }
+  else {
+    Motors.set_power(Motors.Lift, 0);
   }
 }

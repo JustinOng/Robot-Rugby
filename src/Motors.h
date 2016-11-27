@@ -22,6 +22,8 @@ class MotorsClass {
     MotorsClass(void);
     void begin(void);
     void set_power(Motor motor, int16_t power);
+  private:
+    elapsedMillis lastChanged[NUM_MOTORS];
 };
 
 extern MotorsClass Motors;
