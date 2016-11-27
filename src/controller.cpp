@@ -50,8 +50,6 @@ void loop() {
   static float theta = 0;
   static float theta_offset = 0;
 
-  static elapsedMillis gripping_start;
-  static uint8_t gripping = 0;
   Battery_Monitor.loop();
   Receiver.loop();
   Kicker.loop();
