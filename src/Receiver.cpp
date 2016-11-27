@@ -1,7 +1,6 @@
 #include "Receiver.h"
-#include "SBUS.h"
 
-SBUS x8r(2);
+SBUS x8r(SERIAL_PORT);
 ReceiverClass::ReceiverClass(void) {
 
 }

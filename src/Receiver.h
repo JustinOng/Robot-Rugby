@@ -2,9 +2,12 @@
 #define ReceiverIncluded
 
 #include <Arduino.h>
+#include "SBUS.h"
 
 #define SCALE_MIN -100
 #define SCALE_MAX 100
+
+#define SERIAL_PORT 2
 
 class ReceiverClass {
   private:
