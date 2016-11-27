@@ -28,6 +28,9 @@ void setup() {
   pinMode(GRIPPER_SOLENOID_PIN, OUTPUT);
   pinMode(13, OUTPUT);
 
+  pinMode(24, OUTPUT);
+  digitalWrite(24, HIGH);
+
   solenoid_active = WINCH_SOLENOID_PULSE_LENGTH + 1;
 
   mcp.begin();
