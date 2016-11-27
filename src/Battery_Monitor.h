@@ -4,7 +4,7 @@
 #include <FastLED.h>
 
 // time in ms to delay execution of every loop by
-#define THROTTLE_MS 1000
+#define THROTTLE_MS 100
 
 #define LEVEL_WARN 3.7
 #define LEVEL_ERROR 3.4
@@ -14,14 +14,14 @@
 #define BATT_LEDS_PIN 17
 #define NUM_LEDS 3
 
-#define SAMPLES 10
+#define SAMPLES 32
 
 /*
   define the voltage divider that scales down the maximum voltage from the
   MAIN is the value of the resistor that is connected between Ax and GND
   SIDE is the value of the resistor that is connected between Vcc and Ax
 */
-#define VOLTAGE_DIVIDER_MAIN 51
+#define VOLTAGE_DIVIDER_MAIN 56
 #define VOLTAGE_DIVIDER_SIDE 18
 
 #define NUM_CELL_PINS 3
