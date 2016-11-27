@@ -30,8 +30,8 @@ void setup() {
   pinMode(GRIPPER_SOLENOID_PIN, OUTPUT);
   pinMode(13, OUTPUT);
 
-  pinMode(24, OUTPUT);
-  digitalWrite(24, HIGH);
+  pinMode(MOTOR_ENABLE_PIN, OUTPUT);
+  digitalWrite(MOTOR_ENABLE_PIN, HIGH);
 
   mcp.begin();
 

@@ -11,4 +11,6 @@
 #define ULTRASONIC_1_PIN 32
 #define ULTRASONIC_2_PIN 33
 
+#define MOTOR_ENABLE_PIN 24
+
 #endif
