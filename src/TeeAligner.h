@@ -20,6 +20,8 @@ class TeeAlignerClass {
     void loop(void);
 
     void activate(void);
+    void deactivate(void);
+    uint8_t is_active(void);
   private:
     uint8_t active;
     elapsedMillis last_ping;
