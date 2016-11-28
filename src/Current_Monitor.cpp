@@ -16,11 +16,13 @@ void CurrentMonitorClass::loop(void) {
 
     float current = cs_voltage / 0.13;
 
-    Serial1.print("Motor 0: ");
+    /*Serial1.print("M");
+    Serial1.print(i);
+    Serial1.print(": ");
     Serial1.print(current);
-    Serial1.print("A ");
+    Serial1.print("A ");*/
   }
-  Serial1.print("\r\n");
+  //Serial1.print("\r\n");
 }
 
 CurrentMonitorClass Current_Monitor;
