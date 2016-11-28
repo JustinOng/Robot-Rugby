@@ -121,7 +121,7 @@ void loop() {
   }
 
   if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 50) {
-    if (Receiver.get_channel(3) > 0 && analogRead(A1) > 480) {
+    if (Receiver.get_channel(3) > 0 && analogRead(LIFT_HALL_EFFECT_PIN) > 480) {
       Motors.set_power(Motors.Lift, Receiver.get_channel(3));
     }
     else if (Receiver.get_channel(3) < 0) {

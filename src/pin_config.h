@@ -13,4 +13,7 @@
 
 #define MOTOR_ENABLE_PIN 24
 
+#define KICKER_HALL_EFFECT_PIN A0
+#define LIFT_HALL_EFFECT_PIN A1
+
 #endif

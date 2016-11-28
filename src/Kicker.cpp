@@ -22,7 +22,7 @@ void KickerClass::loop(void) {
 
   if (winching == 1) {
     // not in latch area yet, keep winching
-    if (analogRead(A0) > KICKER_HALL_EFFECT_THRESHOLD) {
+    if (analogRead(KICKER_HALL_EFFECT_PIN) > KICKER_HALL_EFFECT_THRESHOLD) {
       Motors.set_power(Motors.Winch, -100);
     }
     else {
