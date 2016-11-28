@@ -80,15 +80,8 @@ void loop() {
     Kicker.reload();
   }
 
-  if (Receiver.get_channel(6) == 0) {
-    for(uint8_t i = 0; i < 8; i++) {
-      mcp.digitalWrite(i, LOW);
-    }
-  }
-  else {
-    for(uint8_t i = 0; i < 8; i++) {
-      mcp.digitalWrite(i, HIGH);
-    }
+  for(uint8_t i = 0; i < 8; i++) {
+    mcp.digitalWrite(i, Kicker.is_loaded());
   }
 
   digitalWrite(GRIPPER_SOLENOID_PIN, Receiver.get_channel(5));
