@@ -29,6 +29,7 @@ void KickerClass::loop(void) {
       // has reached threshold, stop motors, reset encoder
       Motors.set_power(Motors.Winch, 0);
       winching = 2;
+      loaded = 1;
       winchEncoder.write(0);
     }
   }
@@ -45,6 +46,7 @@ void KickerClass::loop(void) {
 
 void KickerClass::release(void) {
   solenoid_active = 0;
+  loaded = 0;
 }
 
 void KickerClass::reload(void) {
@@ -53,6 +55,10 @@ void KickerClass::reload(void) {
 
 uint8_t KickerClass::is_winching(void) {
   return winching > 0;
+}
+
+uint8_t KickerClass::is_loaded(void) {
+  return loaded;
 }
 
 KickerClass Kicker;

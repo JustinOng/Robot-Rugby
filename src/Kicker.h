@@ -25,6 +25,7 @@ class KickerClass {
     void release(void);
     void reload(void);
     uint8_t is_winching(void);
+    uint8_t is_loaded(void);
   private:
     elapsedMillis solenoid_active;
     /*
@@ -34,6 +35,7 @@ class KickerClass {
       2: releasing rope
     */
     uint8_t winching;
+    uint8_t loaded;
 };
 
 extern KickerClass Kicker;
