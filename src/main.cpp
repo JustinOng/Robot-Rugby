@@ -5,6 +5,7 @@
 #include "Battery_Monitor.h"
 #include "Kicker.h"
 #include "TeeAligner.h"
+#include "Current_Monitor.h"
 
 #include "Adafruit_MCP23008.h"
 
@@ -21,6 +22,7 @@ void setup() {
   Receiver.begin();
   Battery_Monitor.begin();
   Kicker.begin();
+  Current_Monitor.begin();
 
   pinMode(GRIPPER_SOLENOID_PIN, OUTPUT);
   pinMode(13, OUTPUT);
@@ -45,6 +47,7 @@ void loop() {
   Battery_Monitor.loop();
   Receiver.loop();
   Kicker.loop();
+  Current_Monitor.loop();
 
   /*Serial1.print("Encoder: ");
   Serial1.println(winchEncoder.read());*/
