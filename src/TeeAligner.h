@@ -9,8 +9,8 @@
 
 #define PING_INTERVAL
 
-NewPing Ultrasonic_Left(ULTRASONIC_1_PIN, ULTRASONIC_1_PIN, ULTRASONIC_MAX);
-NewPing Ultrasonic_Right(ULTRASONIC_2_PIN, ULTRASONIC_2_PIN, ULTRASONIC_MAX);
+extern NewPing Ultrasonic_Left;
+extern NewPing Ultrasonic_Right;
 
 class TeeAlignerClass {
   public:

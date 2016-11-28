@@ -1,5 +1,8 @@
 #include "TeeAligner.h"
 
+NewPing Ultrasonic_Left(ULTRASONIC_1_PIN, ULTRASONIC_1_PIN, ULTRASONIC_MAX);
+NewPing Ultrasonic_Right(ULTRASONIC_2_PIN, ULTRASONIC_2_PIN, ULTRASONIC_MAX);
+
 TeeAlignerClass::TeeAlignerClass(void) {
   active = 0;
   left_distance = 0;
@@ -27,14 +30,16 @@ void TeeAlignerClass::loop(void) {
 
 void TeeAlignerClass::activate(void) {
   active = 1;
+  Serial1.println("Tee Aligner activated");
 }
 
 void TeeAlignerClass::deactivate(void) {
   active = 0;
+  Serial1.println("Tee Aligner deactivated");
 }
 
 uint8_t TeeAlignerClass::is_active(void) {
-  return active;
+  return active > 0;
 }
 
 TeeAlignerClass TeeAligner;
