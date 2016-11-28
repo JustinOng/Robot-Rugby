@@ -93,17 +93,26 @@ void loop() {
 
   digitalWrite(GRIPPER_SOLENOID_PIN, Receiver.get_channel(5));
 
-  int16_t forward = Receiver.get_channel(2);
-  int16_t right = Receiver.get_channel(4);
-
-  if (Receiver.get_channel(9)) {
-    forward *= -1;
+  if (Receiver.get_channel(6)) {
+    TeeAligner.activate();
+  }
+  else {
+    TeeAligner.deactivate();
   }
 
-  Motors.set_power(Motors.FrontLeft, forward + right + Receiver.get_channel(1));
-  Motors.set_power(Motors.FrontRight, - forward + right + Receiver.get_channel(1));
-  Motors.set_power(Motors.BackLeft, forward - right + Receiver.get_channel(1));
-  Motors.set_power(Motors.BackRight, - forward - right + Receiver.get_channel(1));
+  if (!TeeAligner.is_active()) {
+    int16_t forward = Receiver.get_channel(2);
+    int16_t right = Receiver.get_channel(4);
+
+    if (Receiver.get_channel(9)) {
+      forward *= -1;
+    }
+
+    Motors.set_power(Motors.FrontLeft, forward + right + Receiver.get_channel(1));
+    Motors.set_power(Motors.FrontRight, - forward + right + Receiver.get_channel(1));
+    Motors.set_power(Motors.BackLeft, forward - right + Receiver.get_channel(1));
+    Motors.set_power(Motors.BackRight, - forward - right + Receiver.get_channel(1));
+  }
 
   if (!Kicker.is_winching()) {
     //Motors.set_power(Motors.Winch, 0);
