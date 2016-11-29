@@ -6,6 +6,7 @@
 #include "Kicker.h"
 #include "TeeAligner.h"
 #include "Current_Monitor.h"
+#include "Servo.h"
 
 #include "Adafruit_MCP23008.h"
 
@@ -14,6 +15,8 @@
 //#define PRINT_CONTROLLER_VALUES 1
 
 Adafruit_MCP23008 mcp;
+
+Servo gripper;
 
 void setup() {
   Serial1.begin(115200);
@@ -24,13 +27,14 @@ void setup() {
   Kicker.begin();
   Current_Monitor.begin();
 
-  pinMode(GRIPPER_SOLENOID_PIN, OUTPUT);
   pinMode(13, OUTPUT);
 
   pinMode(MOTOR_ENABLE_PIN, OUTPUT);
   digitalWrite(MOTOR_ENABLE_PIN, HIGH);
 
   mcp.begin();
+
+  gripper.attach(GRIPPER_SERVO_PIN, 1500, 2100);
 
   for(uint8_t i = 0; i < 8; i++) {
     mcp.digitalWrite(i, LOW);
@@ -42,6 +46,8 @@ void setup() {
 
 elapsedMillis last_printed;
 elapsedMillis last_ping;
+
+elapsedMillis last_servo;
 
 void loop() {
   Battery_Monitor.loop();
@@ -88,8 +94,6 @@ void loop() {
     mcp.digitalWrite(i, Kicker.is_loaded());
   }
 
-  digitalWrite(GRIPPER_SOLENOID_PIN, Receiver.get_channel(5));
-
   if (Receiver.get_channel(6)) {
     TeeAligner.activate();
   }
@@ -134,5 +138,15 @@ void loop() {
   }
   else {
     Motors.set_power(Motors.Lift, 0);
+  }
+
+  if (last_servo > 200) {
+    last_servo = 0;
+    if (Receiver.get_channel(8) == 0) {
+      uint8_t angle = map(Receiver.get_channel(3), 100, -100, 180, 0);
+      Serial1.print("Servo angle: ");
+      Serial1.println(angle);
+      gripper.write(angle);
+    }
   }
 }
