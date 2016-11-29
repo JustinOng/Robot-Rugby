@@ -48,6 +48,7 @@ void loop() {
   Receiver.loop();
   Kicker.loop();
   Current_Monitor.loop();
+  TeeAligner.loop();
 
   /*Serial1.print("Encoder: ");
   Serial1.println(winchEncoder.read());*/
@@ -55,7 +56,7 @@ void loop() {
   /*Serial1.print("Hall A1: ");
   Serial1.println(analogRead(15));*/
 
-  /*Serial1.print("Hall A): ");
+  /*Serial1.print("Hall A0: ");
   Serial1.println(analogRead(A0));*/
 
   if (last_printed > 500) {
