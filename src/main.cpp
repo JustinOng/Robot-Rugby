@@ -107,6 +107,7 @@ void loop() {
 
     if (Receiver.get_channel(9)) {
       forward *= -1;
+      right *= -1;
     }
 
     Motors.set_power(Motors.FrontLeft, forward + right + Receiver.get_channel(1));
