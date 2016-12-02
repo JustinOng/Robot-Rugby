@@ -20,6 +20,11 @@ void TeeAlignerClass::begin(void) {
 }
 
 void TeeAlignerClass::loop(void) {
+  static int8_t pLeft_power = 0;
+  static int8_t pRight_power = 0;
+
+  static float pLeft_distance = 0;
+  static float pRight_distance = 0;
   /*if (Ultrasonic_Left.check_timer()) {
     left_distance = (float) Ultrasonic_Left.ping_result / US_ROUNDTRIP_CM;
     Serial1.print("Left Sensor: ");
@@ -30,18 +35,28 @@ void TeeAlignerClass::loop(void) {
     Serial1.print("Right Sensor: ");
     Serial1.println(right_distance);
   }
-  else */if (active && last_ping > PING_INTERVAL) {
+  else */
+
+  if (active && last_ping > PING_INTERVAL) {
     last_ping = 0;
 
     float ping_distance = (float) Ultrasonic_Left.ping() / US_ROUNDTRIP_CM;
 
-    left_distance_running_average *= ((float) ULTRASONIC_SAMPLES-1)/ULTRASONIC_SAMPLES;
-    left_distance_running_average += ping_distance;
+    if (abs((ping_distance - pLeft_distance)*100/pLeft_distance) > ULTRASONIC_DIFFERENCE_THRESHOLD ) {
+      left_distance_running_average *= ((float) ULTRASONIC_SAMPLES-1)/ULTRASONIC_SAMPLES;
+      left_distance_running_average += ping_distance;
+    }
+
+    pLeft_distance = ping_distance;
 
     ping_distance = (float) Ultrasonic_Right.ping() / US_ROUNDTRIP_CM;
 
-    right_distance_running_average *= ((float) ULTRASONIC_SAMPLES-1)/ULTRASONIC_SAMPLES;
-    right_distance_running_average += ping_distance;
+    if (abs((ping_distance - pRight_distance)*100/pRight_distance) > ULTRASONIC_DIFFERENCE_THRESHOLD ) {
+      right_distance_running_average *= ((float) ULTRASONIC_SAMPLES-1)/ULTRASONIC_SAMPLES;
+      right_distance_running_average += ping_distance;
+    }
+
+    pRight_distance = ping_distance;
   }
 
   if (active && last_motor_set > MOTOR_INTERVAL) {
@@ -62,25 +77,30 @@ void TeeAlignerClass::loop(void) {
     left_integral += left_error;
     right_integral += right_error;
 
-    int8_t power_left = constrain(left_error * KP_L + left_integral * KI_L, -MAX_L, MAX_L);
-    int8_t power_right = constrain(right_error * KP_R + right_integral * KI_R, -MAX_R, MAX_R);
+    int8_t rotate = constrain(Receiver.get_channel(1), -MAX_INPUT_POWER, MAX_INPUT_POWER);
 
-    Motors.set_power(Motors.FrontLeft, power_left);
-    Motors.set_power(Motors.BackLeft, power_left);
-    Motors.set_power(Motors.FrontRight, -power_right);
-    Motors.set_power(Motors.BackRight, -power_right);
+    int8_t left_power = constrain(left_error * KP_L + (left_integral * KI_L) - (pLeft_power * KD_L), -MAX_L, MAX_L);
+    int8_t right_power = constrain(right_error * KP_R + (right_integral * KI_R) - (pRight_power * KD_R), -MAX_R, MAX_R);
+
+    Motors.set_power(Motors.FrontLeft, left_power + rotate);
+    Motors.set_power(Motors.BackLeft, left_power - rotate);
+    Motors.set_power(Motors.FrontRight, -right_power + rotate);
+    Motors.set_power(Motors.BackRight, -right_power - rotate);
     Serial1.print("Error left: ");
     Serial1.print(left_error);
     Serial1.print(" Power Left: ");
-    Serial1.print(power_left);
+    Serial1.print(left_power);
 
     Serial1.print(" Error right: ");
     Serial1.print(right_error);
     Serial1.print(" Power Right: ");
-    Serial1.println(power_right);
+    Serial1.println(right_power);
 
-    left_integral *= DECAY_RATE
+    left_integral *= DECAY_RATE;
     right_integral *= DECAY_RATE;
+
+    pLeft_power = left_power;
+    pRight_power = right_power;
   }
 }
 
