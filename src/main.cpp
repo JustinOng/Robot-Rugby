@@ -140,13 +140,16 @@ void loop() {
     Motors.set_power(Motors.Lift, 0);
   }
 
-  if (last_servo > 200) {
-    last_servo = 0;
-    if (Receiver.get_channel(8) == 0) {
-      uint8_t angle = map(Receiver.get_channel(3), 100, -100, 180, 0);
-      Serial1.print("Servo angle: ");
-      Serial1.println(angle);
-      gripper.write(angle);
+  if (Receiver.get_channel(8) == 0) {
+    uint8_t angle = map(Receiver.get_channel(3), 100, -100, 180, 0);
+    gripper.write(angle);
+  }
+  else {
+    if (Receiver.get_channel(5)) {
+      gripper.write(0);
+    }
+    else {
+      gripper.write(180);
     }
   }
 }
