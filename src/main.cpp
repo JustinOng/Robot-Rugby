@@ -94,12 +94,12 @@ void loop() {
     mcp.digitalWrite(i, Kicker.is_loaded());
   }
 
-  if (Receiver.get_channel(6)) {
+  /*if (Receiver.get_channel(6) == 2) {
     TeeAligner.activate();
   }
   else {
     TeeAligner.deactivate();
-  }
+  }*/
 
   if (!TeeAligner.is_active()) {
     int16_t forward = Receiver.get_channel(2);
