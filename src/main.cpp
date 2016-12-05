@@ -41,6 +41,9 @@ void setup() {
     mcp.pinMode(i, OUTPUT);
   }
 
+  pinMode(ULTRASONIC_1_PIN, OUTPUT);
+  //digitalWrite(ULTRASONIC_1_PIN, HIGH);
+
   Serial1.println("Setup finished!");
 }
 
@@ -159,4 +162,7 @@ void loop() {
       gripper.write(180);
     }
   }
+
+  digitalWrite(ULTRASONIC_1_PIN, Receiver.get_channel(6));
+
 }
