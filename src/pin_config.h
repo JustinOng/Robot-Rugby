@@ -8,8 +8,11 @@
 
 #define GRIPPER_SERVO_PIN 12
 
+// ultrasonic is not used. pin 1 reused to control servo relay
 #define ULTRASONIC_1_PIN 32
 #define ULTRASONIC_2_PIN 33
+
+#define SERVO_RELAY_PIN 32
 
 #define MOTOR_ENABLE_PIN 24
 
