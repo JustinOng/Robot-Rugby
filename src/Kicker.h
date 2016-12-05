@@ -26,6 +26,9 @@ class KickerClass {
     void reload(void);
     uint8_t is_winching(void);
     uint8_t is_loaded(void);
+
+    // tracks the millis since the kicker was last loaded
+    elapsedMillis last_loaded;
   private:
     elapsedMillis solenoid_active;
     /*
