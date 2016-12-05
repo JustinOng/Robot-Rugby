@@ -157,14 +157,14 @@ void loop() {
     Serial1.println(" degrees");
   }
   else {
-  if (Receiver.get_channel(5)) {
-    gripper.write(26);
-    //gripper.detach();
-  }
-  else {
-    //gripper.attach(GRIPPER_SERVO_PIN, 1500, 2100);
-    gripper.write(130);
-  }
+    if (Receiver.get_channel(5)) {
+      gripper.write(26);
+      //gripper.detach();
+    }
+    else {
+      //gripper.attach(GRIPPER_SERVO_PIN, 1500, 2100);
+      gripper.write(130);
+    }
   }
 
 }
