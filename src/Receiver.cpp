@@ -11,6 +11,14 @@ void ReceiverClass::begin(void) {
 
 void ReceiverClass::loop(void) {
   for(uint8_t i = 1; i <= 10; i++) {
+    if (i == 5 || i == 7 || i == 10) {
+      if (channels[i-1] > 200 && channels[i-1] < 1100) {
+        // skip updating this value if its an intermediate value to prevent
+        // oscillations
+        continue;
+      }
+    }
+
     pChannels[i] = get_channel(i);
   }
 
@@ -52,11 +60,21 @@ int16_t ReceiverClass::get_channel(uint8_t channel) {
 
       break;
     case 5:
-    case 6:
     case 7:
+    case 10:
+     // code for 2 way toggle
+     // need special code because there is an "inbetween state"
+     if (channels[channel-1] > 1100) return 1;
+     if (channels[channel-1] < 200) return 0;
+
+     // if here, then is in intermediate state
+     // return invert of previous state
+     return !pChannels[channel];
+     break;
+    case 6:
     case 8:
     case 9:
-    case 10:
+      // code for 3 way toggle
       if (channels[channel-1] > 1100) return 2;
       if (channels[channel-1] > 200) return 1;
       return 0;
