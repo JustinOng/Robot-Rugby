@@ -89,11 +89,11 @@ void loop() {
     Kicker.release();
   }
 
-  if (Receiver.get_edge(7, ReceiverClass::FALLING_EDGE)) {
+  if (Receiver.get_edge(7, ReceiverClass::RISING_EDGE)) {
     Kicker.reload();
   }
 
-  if (Receiver.get_channel(7) == 0) {
+  if (Receiver.get_channel(7) == 1) {
     if (!Kicker.is_loaded() && Kicker.last_loaded > 500) {
       Kicker.reload();
     }
