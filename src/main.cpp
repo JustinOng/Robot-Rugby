@@ -153,14 +153,18 @@ void loop() {
   if (Receiver.get_channel(8) == 0) {
     uint8_t angle = map(Receiver.get_channel(3), 100, -100, 180, 0);
     gripper.write(angle);
+    Serial1.print(angle);
+    Serial1.println(" degrees");
   }
   else {
-    if (Receiver.get_channel(5)) {
-      gripper.write(0);
-    }
-    else {
-      gripper.write(180);
-    }
+  if (Receiver.get_channel(5)) {
+    gripper.write(26);
+    //gripper.detach();
+  }
+  else {
+    //gripper.attach(GRIPPER_SERVO_PIN, 1500, 2100);
+    gripper.write(130);
+  }
   }
 
   digitalWrite(ULTRASONIC_1_PIN, Receiver.get_channel(6));
