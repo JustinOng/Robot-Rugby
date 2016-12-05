@@ -90,6 +90,12 @@ void loop() {
     Kicker.reload();
   }
 
+  if (Receiver.get_channel(7) == 0) {
+    if (!Kicker.is_loaded() && Kicker.last_loaded > 500) {
+      Kicker.reload();
+    }
+  }
+
   for(uint8_t i = 0; i < 8; i++) {
     mcp.digitalWrite(i, Kicker.is_loaded());
   }
