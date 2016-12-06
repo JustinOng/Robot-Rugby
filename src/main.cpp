@@ -7,6 +7,7 @@
 #include "TeeAligner.h"
 #include "Current_Monitor.h"
 #include "Servo.h"
+#include "Encoder.h"
 
 #include "Adafruit_MCP23008.h"
 
@@ -15,8 +16,12 @@
 //#define PRINT_CONTROLLER_VALUES 1
 
 Adafruit_MCP23008 mcp;
+Encoder liftEncoder(LIFT_ENCODER_A, LIFT_ENCODER_B);
 
 Servo gripper;
+
+#define LIFT_MIN_ENCODER_COUNT -5000
+#define LIFT_HALL_EFFECT_THRESHOLD 800
 
 void setup() {
   Serial1.begin(115200);
@@ -57,13 +62,13 @@ void loop() {
   Receiver.loop();
   Kicker.loop();
   Current_Monitor.loop();
-  TeeAligner.loop();
+  //TeeAligner.loop();
 
-  /*Serial1.print("Encoder: ");
-  Serial1.println(winchEncoder.read());*/
+  Serial1.print("Lift Encoder: ");
+  Serial1.println(liftEncoder.read());
 
   /*Serial1.print("Hall A1: ");
-  Serial1.println(analogRead(15));*/
+  Serial1.println(analogRead(A1));*/
 
   /*Serial1.print("Hall A0: ");
   Serial1.println(analogRead(A0));*/
@@ -93,7 +98,7 @@ void loop() {
     Kicker.reload();
   }
 
-  if (Receiver.get_channel(7) == 1) {
+  if (Receiver.get_channel(7)) {
     if (!Kicker.is_loaded() && Kicker.last_loaded > 500) {
       Kicker.reload();
     }
@@ -135,36 +140,47 @@ void loop() {
     }
   }
 
-  if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 50) {
-    if (Receiver.get_channel(3) > 0 && analogRead(LIFT_HALL_EFFECT_PIN) > 480) {
+  if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 30) {
+    if (Receiver.get_channel(3) > 0 && analogRead(LIFT_HALL_EFFECT_PIN) < LIFT_HALL_EFFECT_THRESHOLD) {
       Motors.set_power(Motors.Lift, Receiver.get_channel(3));
     }
-    else if (Receiver.get_channel(3) < 0) {
+    else if (Receiver.get_channel(3) < 0 && liftEncoder.read() > LIFT_MIN_ENCODER_COUNT) {
       Motors.set_power(Motors.Lift, Receiver.get_channel(3));
     }
     else {
       Motors.set_power(Motors.Lift, 0);
+    }
+
+    if (analogRead(LIFT_HALL_EFFECT_PIN) >= LIFT_HALL_EFFECT_THRESHOLD) {
+      liftEncoder.write(0);
     }
   }
   else {
     Motors.set_power(Motors.Lift, 0);
   }
 
-  if (Receiver.get_channel(8) == 0) {
-    uint8_t angle = map(Receiver.get_channel(3), 100, -100, 180, 0);
-    gripper.write(angle);
-    Serial1.print(angle);
-    Serial1.println(" degrees");
-  }
-  else {
-    if (Receiver.get_channel(5)) {
-      gripper.write(26);
-      //gripper.detach();
+  static uint8_t last_state = Receiver.get_channel(5);
+  static elapsedMillis gripped_for;
+
+  if (Receiver.get_channel(5)) {
+    if (last_state == 0) {
+      gripped_for = 0;
+    }
+
+    if (gripped_for > 500) {
+      digitalWrite(SERVO_RELAY_PIN, LOW);
     }
     else {
-      //gripper.attach(GRIPPER_SERVO_PIN, 1500, 2100);
-      gripper.write(130);
+      gripper.write(33);
     }
+
+    last_state = 1;
+  }
+  else {
+    digitalWrite(SERVO_RELAY_PIN, HIGH);
+    gripper.write(130);
+
+    last_state = 0;
   }
 
 }

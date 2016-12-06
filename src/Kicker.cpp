@@ -49,6 +49,11 @@ void KickerClass::loop(void) {
 }
 
 void KickerClass::release(void) {
+  if (solenoid_active < 1000) {
+    // dont release if active in last second
+    return;
+  }
+
   solenoid_active = 0;
   loaded = 0;
 }
