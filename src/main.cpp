@@ -95,7 +95,7 @@ void loop() {
     Kicker.reload();
   }
 
-  if (Receiver.get_channel(7) == 1) {
+  if (Receiver.get_channel(7)) {
     if (!Kicker.is_loaded() && Kicker.last_loaded > 500) {
       Kicker.reload();
     }
