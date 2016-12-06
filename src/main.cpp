@@ -20,6 +20,9 @@ Encoder liftEncoder(LIFT_ENCODER_A, LIFT_ENCODER_B);
 
 Servo gripper;
 
+#define LIFT_MIN_ENCODER_COUNT -5000
+#define LIFT_HALL_EFFECT_THRESHOLD 800
+
 void setup() {
   Serial1.begin(115200);
 
@@ -138,17 +141,17 @@ void loop() {
   }
 
   if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 30) {
-    if (Receiver.get_channel(3) > 0 && analogRead(LIFT_HALL_EFFECT_PIN) < 800) {
+    if (Receiver.get_channel(3) > 0 && analogRead(LIFT_HALL_EFFECT_PIN) < LIFT_HALL_EFFECT_THRESHOLD) {
       Motors.set_power(Motors.Lift, Receiver.get_channel(3));
     }
-    else if (Receiver.get_channel(3) < 0 && liftEncoder.read() > -5000) {
+    else if (Receiver.get_channel(3) < 0 && liftEncoder.read() > LIFT_MIN_ENCODER_COUNT) {
       Motors.set_power(Motors.Lift, Receiver.get_channel(3));
     }
     else {
       Motors.set_power(Motors.Lift, 0);
     }
 
-    if (analogRead(LIFT_HALL_EFFECT_PIN) >= 800) {
+    if (analogRead(LIFT_HALL_EFFECT_PIN) >= LIFT_HALL_EFFECT_THRESHOLD) {
       liftEncoder.write(0);
     }
   }
