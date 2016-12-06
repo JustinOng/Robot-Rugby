@@ -7,6 +7,7 @@
 #include "TeeAligner.h"
 #include "Current_Monitor.h"
 #include "Servo.h"
+#include "Encoder.h"
 
 #include "Adafruit_MCP23008.h"
 
@@ -15,6 +16,7 @@
 //#define PRINT_CONTROLLER_VALUES 1
 
 Adafruit_MCP23008 mcp;
+Encoder liftEncoder(LIFT_ENCODER_A, LIFT_ENCODER_B);
 
 Servo gripper;
 
@@ -57,13 +59,13 @@ void loop() {
   Receiver.loop();
   Kicker.loop();
   Current_Monitor.loop();
-  TeeAligner.loop();
+  //TeeAligner.loop();
 
-  /*Serial1.print("Encoder: ");
-  Serial1.println(winchEncoder.read());*/
+  Serial1.print("Lift Encoder: ");
+  Serial1.println(liftEncoder.read());
 
   /*Serial1.print("Hall A1: ");
-  Serial1.println(analogRead(15));*/
+  Serial1.println(analogRead(A1));*/
 
   /*Serial1.print("Hall A0: ");
   Serial1.println(analogRead(A0));*/
@@ -135,15 +137,19 @@ void loop() {
     }
   }
 
-  if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 50) {
-    if (Receiver.get_channel(3) > 0 && analogRead(LIFT_HALL_EFFECT_PIN) > 480) {
+  if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 30) {
+    if (Receiver.get_channel(3) > 0 && analogRead(LIFT_HALL_EFFECT_PIN) < 800) {
       Motors.set_power(Motors.Lift, Receiver.get_channel(3));
     }
-    else if (Receiver.get_channel(3) < 0) {
+    else if (Receiver.get_channel(3) < 0 && liftEncoder.read() > -5000) {
       Motors.set_power(Motors.Lift, Receiver.get_channel(3));
     }
     else {
       Motors.set_power(Motors.Lift, 0);
+    }
+
+    if (analogRead(LIFT_HALL_EFFECT_PIN) >= 800) {
+      liftEncoder.write(0);
     }
   }
   else {
