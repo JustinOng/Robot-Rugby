@@ -156,21 +156,28 @@ void loop() {
     Motors.set_power(Motors.Lift, 0);
   }
 
-  if (Receiver.get_channel(8) == 0) {
-    uint8_t angle = map(Receiver.get_channel(3), 100, -100, 180, 0);
-    gripper.write(angle);
-    Serial1.print(angle);
-    Serial1.println(" degrees");
-  }
-  else {
-    if (Receiver.get_channel(5)) {
-      gripper.write(26);
-      //gripper.detach();
+  static uint8_t last_state = Receiver.get_channel(5);
+  static elapsedMillis gripped_for;
+
+  if (Receiver.get_channel(5)) {
+    if (last_state == 0) {
+      gripped_for = 0;
+    }
+
+    if (gripped_for > 500) {
+      digitalWrite(SERVO_RELAY_PIN, LOW);
     }
     else {
-      //gripper.attach(GRIPPER_SERVO_PIN, 1500, 2100);
-      gripper.write(130);
+      gripper.write(33);
     }
+
+    last_state = 1;
+  }
+  else {
+    digitalWrite(SERVO_RELAY_PIN, HIGH);
+    gripper.write(130);
+
+    last_state = 0;
   }
 
 }
