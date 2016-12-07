@@ -8,6 +8,7 @@
 #include "Current_Monitor.h"
 #include "Servo.h"
 #include "Encoder.h"
+#include "Gyro.h"
 
 #include "Adafruit_MCP23008.h"
 
@@ -31,6 +32,7 @@ void setup() {
   Battery_Monitor.begin();
   Kicker.begin();
   Current_Monitor.begin();
+  Gyro.begin();
 
   pinMode(13, OUTPUT);
 
@@ -63,6 +65,7 @@ void loop() {
   Kicker.loop();
   Current_Monitor.loop();
   //TeeAligner.loop();
+  Gyro.loop();
 
   Serial1.print("Lift Encoder: ");
   Serial1.println(liftEncoder.read());
