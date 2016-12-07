@@ -11,6 +11,7 @@ class GyroClass {
 
     void begin(void);
     void loop(void);
+    float euler[3];
 
   private:
     MPU6050 mpu;
@@ -18,7 +19,6 @@ class GyroClass {
     uint8_t packet_size;
     uint8_t fifo_buffer[64];
     Quaternion q;
-    float euler[3];
 };
 
 extern GyroClass Gyro;

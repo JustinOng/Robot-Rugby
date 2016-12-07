@@ -40,12 +40,6 @@ void GyroClass::loop(void) {
     mpu.getFIFOBytes(fifo_buffer, packet_size);
     mpu.dmpGetQuaternion(&q, fifo_buffer);
     mpu.dmpGetEuler(euler, &q);
-    Serial1.print("euler\t");
-    Serial1.print(euler[0] * 180/M_PI);
-    Serial1.print("\t");
-    Serial1.print(euler[1] * 180/M_PI);
-    Serial1.print("\t");
-    Serial1.println(euler[2] * 180/M_PI);
   }
 }
 
