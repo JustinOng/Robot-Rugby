@@ -27,6 +27,8 @@ Servo gripper;
 void setup() {
   Serial1.begin(115200);
 
+  mcp.begin();
+
   Motors.begin();
   Receiver.begin();
   Battery_Monitor.begin();
@@ -38,8 +40,6 @@ void setup() {
 
   pinMode(MOTOR_ENABLE_PIN, OUTPUT);
   digitalWrite(MOTOR_ENABLE_PIN, HIGH);
-
-  mcp.begin();
 
   gripper.attach(GRIPPER_SERVO_PIN, 1500, 2100);
 
@@ -67,8 +67,8 @@ void loop() {
   //TeeAligner.loop();
   Gyro.loop();
 
-  Serial1.print("Lift Encoder: ");
-  Serial1.println(liftEncoder.read());
+  /*Serial1.print("Lift Encoder: ");
+  Serial1.println(liftEncoder.read());*/
 
   /*Serial1.print("Hall A1: ");
   Serial1.println(analogRead(A1));*/
