@@ -167,14 +167,14 @@ void loop() {
       digitalWrite(SERVO_RELAY_PIN, LOW);
     }
     else {
-      gripper.write(33);
+      gripper.write(0);
     }
 
     last_state = 1;
   }
   else {
     digitalWrite(SERVO_RELAY_PIN, HIGH);
-    gripper.write(130);
+    gripper.write(150);
 
     last_state = 0;
   }
