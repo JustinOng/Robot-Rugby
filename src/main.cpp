@@ -60,6 +60,8 @@ elapsedMillis last_ping;
 elapsedMillis last_servo;
 
 void loop() {
+  static float theta_offset = 0;
+
   Battery_Monitor.loop();
   Receiver.loop();
   Kicker.loop();
@@ -111,13 +113,37 @@ void loop() {
     mcp.digitalWrite(i, Kicker.is_loaded());
   }
 
+  /*if (Receiver.get_channel(6) == 2) {
+    TeeAligner.activate();
+  }
+  else {
+    TeeAligner.deactivate();
+  }*/
+
+  if (Receiver.get_channel(6) == 0) {
+    theta_offset = Gyro.euler[0];
+    if (theta_offset < 0) theta_offset += 2*PI;
+  }
+
   if (!TeeAligner.is_active()) {
     int16_t forward = Receiver.get_channel(2);
     int16_t right = Receiver.get_channel(4);
 
-    if (Receiver.get_channel(9)) {
+    if (Receiver.get_channel(6) == 2 && Receiver.get_channel(9)) {
       forward *= -1;
       right *= -1;
+    }
+    else if (Receiver.get_channel(6) == 1) {
+      int16_t input_forward = forward;
+      int16_t input_right = right;
+      float current = Gyro.euler[0];
+
+      if (current < 0) current += 2*PI;
+
+      float correction = current - theta_offset;
+
+      right = cos(correction) * input_right - sin(correction) * input_forward;
+      forward = sin(correction) * input_right + cos(correction) * input_forward;
     }
 
     Motors.set_power(Motors.FrontLeft, forward + right + Receiver.get_channel(1));
