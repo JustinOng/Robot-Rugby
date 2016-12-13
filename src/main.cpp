@@ -22,7 +22,10 @@ Encoder liftEncoder(LIFT_ENCODER_A, LIFT_ENCODER_B);
 
 Servo gripper;
 
-#define LIFT_MIN_ENCODER_COUNT -5000
+// minimum value to use when not in competition mode
+#define LIFT_MIN_ENCODER_COUNT -5500
+// minimum value to use when in competition mode
+#define LIFT_MIN_ENCODER_COMP -3300
 #define LIFT_HALL_EFFECT_THRESHOLD 800
 
 void setup() {
@@ -169,7 +172,7 @@ void loop() {
     if (Receiver.get_channel(3) > 0 && analogRead(LIFT_HALL_EFFECT_PIN) < LIFT_HALL_EFFECT_THRESHOLD) {
       Motors.set_power(Motors.Lift, Receiver.get_channel(3));
     }
-    else if (Receiver.get_channel(3) < 0 && liftEncoder.read() > LIFT_MIN_ENCODER_COUNT) {
+    else if (Receiver.get_channel(3) < 0 && liftEncoder.read() > (Receiver.get_channel(7) ? LIFT_MIN_ENCODER_COMP : LIFT_MIN_ENCODER_COUNT)) {
       Motors.set_power(Motors.Lift, Receiver.get_channel(3));
     }
     else {
