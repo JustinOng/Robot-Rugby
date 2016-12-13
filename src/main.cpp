@@ -2,7 +2,6 @@
 
 #include "Receiver.h"
 #include "Motors.h"
-#include "Battery_Monitor.h"
 #include "Kicker.h"
 #include "TeeAligner.h"
 #include "Current_Monitor.h"
@@ -31,7 +30,6 @@ void setup() {
 
   Motors.begin();
   Receiver.begin();
-  Battery_Monitor.begin();
   Kicker.begin();
   Current_Monitor.begin();
   Gyro.begin();
@@ -62,7 +60,6 @@ elapsedMillis last_servo;
 void loop() {
   static float theta_offset = 0;
 
-  Battery_Monitor.loop();
   Receiver.loop();
   Kicker.loop();
   Current_Monitor.loop();
