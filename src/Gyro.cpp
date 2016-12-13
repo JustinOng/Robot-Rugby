@@ -30,9 +30,17 @@ void GyroClass::begin(void) {
 }
 
 void GyroClass::loop(void) {
+  uint8_t mpuIntStatus = mpu.getIntStatus();
+  uint8_t fifo_count = mpu.getFIFOCount();
+  if ((mpuIntStatus & 0x10) || fifo_count == 1024) {
+    // reset so we can continue cleanly
+    mpu.resetFIFO();
+    Serial.println(F("FIFO overflow!"));
+    return;
+  }
   // if DMP ready
-  if (mpu.getIntStatus() & 0x02) {
-    if (mpu.getFIFOCount() < packet_size) {
+  if (mpuIntStatus & 0x02) {
+    if (fifo_count < packet_size) {
       // not enough data in DMP FIFO, exit this loop and wait for next one
       return;
     }
