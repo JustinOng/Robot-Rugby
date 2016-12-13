@@ -9,6 +9,7 @@
 #include "Encoder.h"
 #include "Gyro.h"
 #include "Status_Lights.h"
+#include "Christmas_Tree.h"
 
 #include "Adafruit_MCP23008.h"
 
@@ -35,6 +36,7 @@ void setup() {
   Current_Monitor.begin();
   Gyro.begin();
   Status_Lights.begin();
+  Christmas_Tree.begin();
 
   pinMode(13, OUTPUT);
 
@@ -68,6 +70,7 @@ void loop() {
   //TeeAligner.loop();
   Gyro.loop();
   Status_Lights.loop(!Receiver.failSafe);
+  Christmas_Tree.loop(Receiver.get_channel(9));
 
   /*Serial1.print("Lift Encoder: ");
   Serial1.println(liftEncoder.read());*/
