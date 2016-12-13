@@ -8,6 +8,7 @@
 #include "Servo.h"
 #include "Encoder.h"
 #include "Gyro.h"
+#include "Status_Lights.h"
 
 #include "Adafruit_MCP23008.h"
 
@@ -33,6 +34,7 @@ void setup() {
   Kicker.begin();
   Current_Monitor.begin();
   Gyro.begin();
+  Status_Lights.begin();
 
   pinMode(13, OUTPUT);
 
@@ -65,6 +67,7 @@ void loop() {
   Current_Monitor.loop();
   //TeeAligner.loop();
   Gyro.loop();
+  Status_Lights.loop(!Receiver.failSafe);
 
   /*Serial1.print("Lift Encoder: ");
   Serial1.println(liftEncoder.read());*/

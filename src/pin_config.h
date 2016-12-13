@@ -22,4 +22,5 @@
 #define KICKER_HALL_EFFECT_PIN A0
 #define LIFT_HALL_EFFECT_PIN A1
 
+#define STATUS_LEDS_PIN 16
 #endif
