@@ -181,7 +181,7 @@ void loop() {
   static uint8_t last_state = Receiver.get_channel(5);
   static elapsedMillis gripped_for;
 
-  if (Receiver.get_channel(5)) {
+  if (Receiver.failSafe ||  !Receiver.get_channel(5)) {
     if (last_state == 0) {
       gripped_for = 0;
     }
