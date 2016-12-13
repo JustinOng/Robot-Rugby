@@ -20,8 +20,14 @@ void KickerClass::loop(void) {
     digitalWrite(WINCH_SOLENOID_PIN, LOW);
   }
 
-  if (analogRead(KICKER_HALL_EFFECT_PIN) < KICKER_HALL_EFFECT_THRESHOLD) {
+  uint16_t kicker_hall_effect_position = analogRead(KICKER_HALL_EFFECT_PIN);
+
+  if (kicker_hall_effect_position < KICKER_HALL_EFFECT_THRESHOLD) {
     last_loaded = 0;
+    loaded = 1;
+  }
+  else if (kicker_hall_effect_position > (KICKER_HALL_EFFECT_THRESHOLD + KICKER_HALL_EFFECT_HYSTERESIS)) {
+    loaded = 0;
   }
 
   if (winching == 1) {
@@ -33,7 +39,6 @@ void KickerClass::loop(void) {
       // has reached threshold, stop motors, reset encoder
       Motors.set_power(Motors.Winch, 0);
       winching = 2;
-      loaded = 1;
       winchEncoder.write(0);
     }
   }
@@ -49,16 +54,17 @@ void KickerClass::loop(void) {
 }
 
 void KickerClass::release(void) {
-  if (solenoid_active < 1000) {
-    // dont release if active in last second
+  if (!is_loaded() && solenoid_active < 1000) {
+    // dont release if active in last second and not loaded
     return;
   }
 
   solenoid_active = 0;
-  loaded = 0;
 }
 
 void KickerClass::reload(void) {
+  if (is_loaded()) return;
+
   winching = 1;
 }
 

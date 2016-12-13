@@ -9,6 +9,7 @@
 
 #define WINCH_SOLENOID_PULSE_LENGTH 50
 #define KICKER_HALL_EFFECT_THRESHOLD 450
+#define KICKER_HALL_EFFECT_HYSTERESIS 100
 
 // encoder count to release after pulling in
 #define KICKER_RELEASE_COUNT 7000
