@@ -66,6 +66,17 @@ elapsedMillis last_servo;
 
 void loop() {
   static float theta_offset = 0;
+  static uint8_t has_seen_receiver_active = 0;
+  static uint8_t debug = 0;
+
+  if (!Receiver.failSafe && !has_seen_receiver_active) {
+    has_seen_receiver_active = 1;
+
+    // first time that receiver has connected, check if channel 10 is active
+    if (Receiver.get_channel(10)) {
+      debug = 1;
+    }
+  }
 
   Receiver.loop();
   Kicker.loop();
@@ -160,7 +171,7 @@ void loop() {
 
   if (!Kicker.is_winching()) {
     //Motors.set_power(Motors.Winch, 0);
-    if (Receiver.get_channel(8) == 1 && abs(Receiver.get_channel(3)) > 50) {
+    if (debug && Receiver.get_channel(8) == 1 && abs(Receiver.get_channel(3)) > 50) {
       Motors.set_power(Motors.Winch, Receiver.get_channel(3));
     }
     else {
@@ -170,7 +181,7 @@ void loop() {
 
   uint16_t lift_hall_effect_position = analogRead(LIFT_HALL_EFFECT_PIN);
 
-  if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 30) {
+  if ((Receiver.get_channel(8) == 2 || !debug) && abs(Receiver.get_channel(3)) > 30) {
     if (Receiver.get_channel(3) > 0 && lift_hall_effect_position < LIFT_HALL_EFFECT_THRESHOLD) {
       int8_t power = Receiver.get_channel(3);
 
