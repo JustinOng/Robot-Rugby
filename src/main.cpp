@@ -36,7 +36,7 @@ void setup() {
   Motors.begin();
   Receiver.begin();
   Kicker.begin();
-  Current_Monitor.begin();
+  //Current_Monitor.begin();
   Gyro.begin();
   Status_Lights.begin();
   Christmas_Tree.begin();
@@ -69,7 +69,7 @@ void loop() {
 
   Receiver.loop();
   Kicker.loop();
-  Current_Monitor.loop();
+  //Current_Monitor.loop();
   //TeeAligner.loop();
   Gyro.loop();
   Status_Lights.loop(!Receiver.failSafe);
