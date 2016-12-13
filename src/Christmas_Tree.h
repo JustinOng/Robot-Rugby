@@ -7,7 +7,7 @@
 // time in ms to delay execution of every loop by
 #define THROTTLE_MS 100
 
-#define BATT_LED_BRIGHTNESS 100
+#define LED_BRIGHTNESS 100
 
 #define NUM_LEDS 10
 

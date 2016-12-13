@@ -38,7 +38,7 @@ void Christmas_Tree_Class::loop(uint8_t front_invert) {
     }
   }
 
-  controller->showLeds(BATT_LED_BRIGHTNESS);
+  controller->showLeds(LED_BRIGHTNESS);
 }
 
 Christmas_Tree_Class Christmas_Tree;
