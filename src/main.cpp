@@ -168,9 +168,20 @@ void loop() {
     }
   }
 
+  uint16_t lift_hall_effect_position = analogRead(LIFT_HALL_EFFECT_PIN);
+
   if (Receiver.get_channel(8) == 2 && abs(Receiver.get_channel(3)) > 30) {
-    if (Receiver.get_channel(3) > 0 && analogRead(LIFT_HALL_EFFECT_PIN) < LIFT_HALL_EFFECT_THRESHOLD) {
-      Motors.set_power(Motors.Lift, Receiver.get_channel(3));
+    if (Receiver.get_channel(3) > 0 && lift_hall_effect_position < LIFT_HALL_EFFECT_THRESHOLD) {
+      int8_t power = Receiver.get_channel(3);
+
+      // scale motor power depending on how close to LIFT_HALL_EFFECT_THRESHOLD we are
+      int8_t error = LIFT_HALL_EFFECT_THRESHOLD - lift_hall_effect_position;
+      if (error < 100) {
+        // scale motor power only if very close to the top
+        power = -max(20, error / 100);
+      }
+
+      Motors.set_power(Motors.Lift, power);
     }
     else if (Receiver.get_channel(3) < 0 && liftEncoder.read() > (Receiver.get_channel(7) ? LIFT_MIN_ENCODER_COMP : LIFT_MIN_ENCODER_COUNT)) {
       Motors.set_power(Motors.Lift, Receiver.get_channel(3));
