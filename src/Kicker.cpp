@@ -6,6 +6,7 @@ KickerClass::KickerClass(void) {
   // initialise to +1 so that the winch is already inactive
   solenoid_active = WINCH_SOLENOID_PULSE_LENGTH + 1;
   winching = 0;
+  loaded = 1;
 }
 
 void KickerClass::begin(void) {
