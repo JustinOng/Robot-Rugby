@@ -180,6 +180,8 @@ void loop() {
   }
 
   uint16_t lift_hall_effect_position = analogRead(LIFT_HALL_EFFECT_PIN);
+  Serial1.print("Hall effect lift position:");
+  Serial1.println(lift_hall_effect_position);
 
   if ((Receiver.get_channel(8) == 2 || !debug) && abs(Receiver.get_channel(3)) > 30) {
     if (Receiver.get_channel(3) > 0 && lift_hall_effect_position < LIFT_HALL_EFFECT_THRESHOLD) {
@@ -187,9 +189,9 @@ void loop() {
 
       // scale motor power depending on how close to LIFT_HALL_EFFECT_THRESHOLD we are
       int8_t error = LIFT_HALL_EFFECT_THRESHOLD - lift_hall_effect_position;
-      if (error < 100) {
+      if (error < 40) {
         // scale motor power only if very close to the top
-        power = -max(20, error / 100);
+        power = (int8_t) ((float) power * error / 40);
       }
 
       Motors.set_power(Motors.Lift, power);
