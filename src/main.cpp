@@ -84,7 +84,7 @@ void loop() {
   //TeeAligner.loop();
   Gyro.loop();
   Status_Lights.loop(!Receiver.failSafe);
-  Christmas_Tree.loop(Receiver.get_channel(9));
+  Christmas_Tree.loop(Receiver.get_channel(7), Receiver.get_channel(9));
 
   /*Serial1.print("Lift Encoder: ");
   Serial1.println(liftEncoder.read());*/
