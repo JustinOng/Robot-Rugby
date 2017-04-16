@@ -1,26 +1,26 @@
 #Robot Rugby
 
-![Overall Robot](img/overall_robot.jpg?raw=true "Overall Robot")
+![Overall Robot](img/overall_robot.JPG?raw=true "Overall Robot")
 
 This robot was built for the 21st Tsuyama Robotic Contest in Tsuyama, Japan by a team of 4 people over a bit more than 3 months. The competition ran in 3 minute rounds, with each robot placing the minature rugby ball on the tees, kicking it through the goal, picking it up and repeating the entire process as many times as possible. Kicking the ball from the side tees gave more points than kicking the ball from the center tee.
 
 ###Mechanical parts
 
-![Robot Base](img/base.jpg?raw=true "Holonomic drive")
+![Robot Base](img/base.JPG?raw=true "Holonomic drive")
 Holonomic drive powered by 4 [NeveRest 40 motors](https://www.andymark.com/NeveRest-40-Gearmotor-p/am-2964a.htm)
 
-![Kicker](img/kicker.jpg?raw=true "Kicker")
-![Kicker Latch](img/kicker_latch.jpg?raw=true "Kicker latch mechanism")
-![Kicker Latched](img/kicker_latched.jpg?raw=true "Kicker latched")
+![Kicker](img/kicker.JPG?raw=true "Kicker")
+![Kicker Latch](img/kicker_latch.JPG?raw=true "Kicker latch mechanism")
+![Kicker Latched](img/kicker_latched.JPG?raw=true "Kicker latched")
 Kicker consists of an aluminium beam powered by an exercise band (like a slingshot), latched down with a [gate latch](https://www.monotaro.sg/g/00529473/) which is released by a pair of solenoids (in hindsight, a servo would be better and more reliable here as our solenoids jammed sometimes). After kicking, a Neverest 60 motor winches in the kicker, latches it against the gate latch then releases the rope again. A Hall Effect sensor detected when the kicker was latched.
 
-![Back](img/back.jpg?raw=true "Back")
+![Back](img/back.JPG?raw=true "Back")
 Our grabbing mechanism used a modified plate grabber with an additional servo to open the grabber and elastic bands to close the grabber. The use of elastic bands allowed some play in the grabber so that we did not have to "hold" the servo there and overheat it. We also cut power to the servo when in the closed state.
 
-![Back Winch](img/back_winch.jpg?raw=true "Back winch")
+![Back Winch](img/back_winch.JPG?raw=true "Back winch")
 The grabber is moved up and down by a winch pulling on a rope guided by a pair of metal drawer slides. The winch is powered by a NeveRest 60 motor. You can also see the clothes peg that we used to hold down the mechanism when folded.
 
-![Back Partially Folded](img/back_partial_folded.jpg?raw=true "Back partially folded")
+![Back Partially Folded](img/back_partial_folded.JPG?raw=true "Back partially folded")
 ![Back Folded](img/back_folded.jpg?raw=true "Back folded")
 The entire grabber mechanism is hinged and folds back to allow the robot to fit in the size restriction of 0.5m x 0.5m x 0.5m. A cable tie loop on the mechanism is clipped into a clothes peg. At the start of each round, the grabber mechanism is raised, pulling the cable tie loop out of the clothes peg and releasing the mechanism.
 
