@@ -1,10 +1,10 @@
-#Robot Rugby
+# Robot Rugby
 
 ![Overall Robot](img/overall_robot.JPG?raw=true "Overall Robot")
 
 This robot was built for the 21st Tsuyama Robotic Contest in Tsuyama, Japan by a team of 4 people over a bit more than 3 months. The competition ran in 3 minute rounds, with each robot placing the minature rugby ball on the tees, kicking it through the goal, picking it up and repeating the entire process as many times as possible. Kicking the ball from the side tees gave more points than kicking the ball from the center tee.
 
-###Mechanical parts
+### Mechanical parts
 
 ![Robot Base](img/base.JPG?raw=true "Holonomic drive")
 Holonomic drive powered by 4 [NeveRest 40 motors](https://www.andymark.com/NeveRest-40-Gearmotor-p/am-2964a.htm)
@@ -24,7 +24,7 @@ The grabber is moved up and down by a winch pulling on a rope guided by a pair o
 ![Back Folded](img/back_folded.jpg?raw=true "Back folded")
 The entire grabber mechanism is hinged and folds back to allow the robot to fit in the size restriction of 0.5m x 0.5m x 0.5m. A cable tie loop on the mechanism is clipped into a clothes peg. At the start of each round, the grabber mechanism is raised, pulling the cable tie loop out of the clothes peg and releasing the mechanism.
 
-###Electronics
+### Electronics
 
 ![Controller board schematics](img/main_controller_schematics.png?raw=true "Main controller schematics")
 The main brain of the robot was a Teensy 3.2.
